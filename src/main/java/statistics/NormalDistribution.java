@@ -1,11 +1,9 @@
 package statistics;
 
 import interfaces.Distribution;
-import org.apache.commons.math3.util.FastMath;
 
 import java.util.Random;
 
-//TODO implement normaldistribution ourselves
 public class NormalDistribution implements Distribution {
 
     protected double mean;

@@ -1,11 +1,10 @@
 import charts.LineChart;
 import configs.ArrivalRatesConfig;
 import configs.ServiceTimesConfig;
-import factories.CallFactory;
+import configs.SimulationConfig;
 import factories.RangeArrivalRateFactory;
 import factories.SinusoidArrivalRateFactory;
 import factories.ServiceTimeFactory;
-import interfaces.ICallFactory;
 import models.ArrivalRate;
 
 public class Main {
@@ -14,53 +13,46 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        exploreData();
-
-        ArrivalRate consumerArrivalRate = (new SinusoidArrivalRateFactory(
-                ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE,
-                ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD,
-                ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_MINUTE_VALUE,
-                ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_HOUR
-        )).build();
-
-        ArrivalRate corporateArrivalRate = (new RangeArrivalRateFactory(
-                ArrivalRatesConfig.CORPORATE_AVG_ARRIVAL_RATE_RANGE
-        )).build();
-
-        ICallFactory callFactory = new CallFactory(
-                new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT),
-                new ServiceTimeFactory(ServiceTimesConfig.CORPORATE_SERVICE_TIME_MEAN, ServiceTimesConfig.CORPORATE_SERVICE_TIME_STD, ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT)
+        Simulation simulation = new Simulation(
+                SimulationConfig.CONSUMER_ARRIVAL_RATE,
+                SimulationConfig.CORPORATE_ARRIVAL_RATE,
+                SimulationConfig.CALL_FACTORY
         );
 
-        Simulation simulation = new Simulation(consumerArrivalRate, corporateArrivalRate, callFactory);
-        simulation.run(10000);
-
-        double[] avgConsumerServicesTimes = simulation.getConsumer().getAverageServiceTimePerHour();
-        double[] avgCorporateServicesTimes = simulation.getCorporate().getAverageServiceTimePerHour();
-
-        double[] avgConsumerCallsPerHour = simulation.getConsumer().getAverageCallsPerHour();
-        double[] avgCorporateCallsPerHour = simulation.getCorporate().getAverageCallsPerHour();
-
-        double avgConsumerServiceTime = simulation.getConsumer().getTotalAverageServiceTime();
-        double avgCorporateServiceTime = simulation.getCorporate().getTotalAverageServiceTime();
+        simulation.run(SimulationConfig.SIMULATION_COUNT);
 
         System.out.println("---------------------------");
         System.out.println("---------------------------");
-        System.out.println("Avg Consumer Service Time: " + avgConsumerServiceTime);
-        System.out.println("Avg corporate Service Time: " + avgCorporateServiceTime);
+        System.out.println("Avg Consumer Service Time: " + simulation.getConsumer().getTotalAverageServiceTime());
+        System.out.println("Avg corporate Service Time: " + simulation.getCorporate().getTotalAverageServiceTime());
 
-        LineChart consumerServiceTimeChart = new LineChart("Avg Consumer Service times", "time (hours)", "service time (minutes)", avgConsumerServicesTimes);
-        consumerServiceTimeChart.render();
+        (new LineChart(
+                "Avg Consumer Service times",
+                "time (hours)",
+                "service time (minutes)",
+                simulation.getConsumer().getAverageServiceTimePerHour()
+        )).render();
 
-        LineChart corporateServiceTimeChart = new LineChart("Avg Corporate Service times", "time (hours)", "service time (minutes)", avgCorporateServicesTimes);
-        corporateServiceTimeChart.render();
+        (new LineChart(
+                "Avg Corporate Service times",
+                "time (hours)",
+                "service time (minutes)",
+                simulation.getCorporate().getAverageServiceTimePerHour()
+        )).render();
 
-        LineChart corporateChart = new LineChart("avg corporate calls per hour", "time (hour)", "Rate of calls", avgCorporateCallsPerHour);
-        corporateChart.render();
+        (new LineChart(
+                "avg corporate calls per hour",
+                "time (hour)",
+                "Rate of calls",
+                simulation.getCorporate().getAverageCallsPerHour()
+        )).render();
 
-        LineChart consumerChart = new LineChart("avg consumer calls per hour", "time (hour)", "Rate of calls", avgConsumerCallsPerHour);
-        consumerChart.render();
+        (new LineChart(
+                "avg consumer calls per hour",
+                "time (hour)",
+                "Rate of calls",
+                simulation.getConsumer().getAverageCallsPerHour()
+        )).render();
     }
 
     public static void exploreData() {
