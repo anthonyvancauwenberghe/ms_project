@@ -34,6 +34,13 @@ public class Main {
         )).render();
 
         (new LineChart(
+                "Avg Consumer Service times (minutes)",
+                "time (minutes)",
+                "service time (minutes)",
+                simulation.getConsumer().getAverageServiceTimesPerMinute()
+        )).render();
+
+        (new LineChart(
                 "Avg Corporate Service times",
                 "time (hours)",
                 "service time (minutes)",
@@ -48,11 +55,20 @@ public class Main {
         )).render();
 
         (new LineChart(
+                "avg consumer calls per minute",
+                "time (minute)",
+                "Rate of calls",
+                simulation.getConsumer().getAverageCallsPerMinute()
+        )).render();
+
+        (new LineChart(
                 "avg consumer calls per hour",
                 "time (hour)",
                 "Rate of calls",
                 simulation.getConsumer().getAverageCallsPerHour()
         )).render();
+
+        //exploreData();
     }
 
     public static void exploreData() {

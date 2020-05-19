@@ -27,6 +27,17 @@ public class IterationSimulationResult {
         return hours;
     }
 
+    public double[] getAverageServiceTimePerMinute() {
+        double[] times = new double[24 * 60];
+
+        for (int h = 0; h < 24; h++) {
+            for (int m = 0; m < 60; m++) {
+                times[h * 60 + m] = this.get(h, m).totalServiceTime();
+            }
+        }
+        return times;
+    }
+
     public double[] getAverageCallsPerHour() {
         double[] hours = new double[24];
 
@@ -38,6 +49,17 @@ public class IterationSimulationResult {
             hours[h] = total;
         }
         return hours;
+    }
+
+    public double[] getAverageCallsPerMinute() {
+        double[] calls = new double[24 * 60];
+
+        for (int h = 0; h < 24; h++) {
+            for (int m = 0; m < 60; m++) {
+                calls[h * 60 + m] = this.get(h, m).size();
+            }
+        }
+        return calls;
     }
 
 }

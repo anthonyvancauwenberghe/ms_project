@@ -8,7 +8,7 @@ import models.ArrivalRate;
 
 public class SimulationConfig {
 
-    public static int SIMULATION_COUNT = 1000;
+    public static int SIMULATION_COUNT = 10000;
 
     public static CallFactory CALL_FACTORY = new CallFactory(
             new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT),
