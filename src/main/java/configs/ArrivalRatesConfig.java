@@ -1,5 +1,6 @@
-public class Config {
+package configs;
 
+public class ArrivalRatesConfig {
     public static final double CONSUMER_AVG_MINUTE_ARRIVAL_RATE = 2;
     public static final double CONSUMER_ARRIVAL_RATE_PERIOD = 24;
     public static final double CONSUMER_ARRIVAL_LOWEST_HOUR = 3;
@@ -31,14 +32,4 @@ public class Config {
             0.2, //22-23
             0.2, //23-24
     };
-
-
-    public static final double CONSUMER_SERVICE_TIME_MEAN = 1.2*60;
-    public static final double CONSUMER_SERVICE_TIME_STD = 35;
-    public static final int CONSUMER_SERVICE_TIME_TRUNC_LEFT = 25;
-
-    public static final double CORPORATE_SERVICE_TIME_MEAN = 3.6*60;
-    public static final double CORPORATE_SERVICE_TIME_STD = 1.2*60;
-    public static final int CORPORATE_SERVICE_TIME_TRUNC_LEFT = 45;
-
 }
