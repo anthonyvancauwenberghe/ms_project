@@ -15,6 +15,8 @@ public class Main {
      */
     public static void main(String[] args) {
 
+        exploreData();
+
         ArrivalRate consumerArrivalRate = (new SinusoidArrivalRateFactory(
                 ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE,
                 ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD,
@@ -76,14 +78,11 @@ public class Main {
         ServiceTimeFactory consumerServiceTime = (new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT));
         ServiceTimeFactory corporateServiceTime = (new ServiceTimeFactory(ServiceTimesConfig.CORPORATE_SERVICE_TIME_MEAN, ServiceTimesConfig.CORPORATE_SERVICE_TIME_STD, ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT));
 
-        double[] consumerServiceTimeData = consumerServiceTime.build(100);
-        double[] corporateServiceTimeData = corporateServiceTime.build(100);
-
-/*        LineChart consumerServiceTimeChart = new LineChart("Consumer Service times", "time (seconds)", "Probability", consumerServiceTime.getProbabilities(500));
+        LineChart consumerServiceTimeChart = new LineChart("Consumer Service time density", "time (seconds)", "Probability", consumerServiceTime.probabilities(500));
         consumerServiceTimeChart.render();
 
-        LineChart corporateServiceTimeChart = new LineChart("Corporate Service times", "time (seconds)", "Probability", corporateServiceTime.getProbabilities(500));
-        corporateServiceTimeChart.render();*/
+        LineChart corporateServiceTimeChart = new LineChart("Corporate Service time density", "time (seconds)", "Probability", corporateServiceTime.probabilities(500));
+        corporateServiceTimeChart.render();
 
         LineChart corporateChart = new LineChart("corporate arrival times", "time (minutes)", "Rate of arrivals", corporateArrivalRate.getRates());
         corporateChart.render();

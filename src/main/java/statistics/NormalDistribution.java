@@ -1,6 +1,7 @@
 package statistics;
 
 import interfaces.Distribution;
+import org.apache.commons.math3.util.FastMath;
 
 import java.util.Random;
 
@@ -32,6 +33,10 @@ public class NormalDistribution implements Distribution {
             samples[i] = this.sample();
         }
         return samples;
+    }
+
+    public double density(double x) {
+        return Math.exp(-((Math.pow((x - this.mean) / this.std, 2)) / 2) - Math.log(this.std) + (Math.log(Math.PI) / 2));
     }
 
 }
