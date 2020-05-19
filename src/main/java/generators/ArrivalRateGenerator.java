@@ -1,9 +1,8 @@
 package generators;
 
 public class ArrivalRateGenerator {
-
-    public  generate(){
-
+    public int[] generate(){
+        return new int[]{};
     }
 
 }
