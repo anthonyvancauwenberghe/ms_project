@@ -1,11 +1,11 @@
 import enums.CallType;
 import interfaces.ICallFactory;
 import models.ArrivalRate;
-import models.CallGroup;
-import models.CallSimulationGroup;
+import results.MinutelyCallResult;
+import results.IterationSimulationResult;
 import java.util.concurrent.Callable;
 
-public class SimulationTask implements Callable<CallSimulationGroup[]> {
+public class SimulationTask implements Callable<IterationSimulationResult[]> {
 
     protected ArrivalRate consumerArrivalRate;
     protected ArrivalRate corporateArrivalRate;
@@ -21,17 +21,17 @@ public class SimulationTask implements Callable<CallSimulationGroup[]> {
         this.callFactory = callFactory;
     }
 
-    public CallSimulationGroup[] call() {
-        CallSimulationGroup consumerCallSimulation = new CallSimulationGroup();
-        CallSimulationGroup corporateCallSimulation = new CallSimulationGroup();
+    public IterationSimulationResult[] call() {
+        IterationSimulationResult consumerCallSimulation = new IterationSimulationResult();
+        IterationSimulationResult corporateCallSimulation = new IterationSimulationResult();
 
         for (int h = 0; h < 24; h++) {
             for (int m = 0; m < 60; m++) {
                 int consumerArrivals = this.consumerArrivalRate.getArrivalRateSample(h, m);
                 int corporateArrivals = this.corporateArrivalRate.getArrivalRateSample(h, m);
 
-                CallGroup consumerCalls = new CallGroup();
-                CallGroup corporateCalls = new CallGroup();
+                MinutelyCallResult consumerCalls = new MinutelyCallResult();
+                MinutelyCallResult corporateCalls = new MinutelyCallResult();
 
                 for (int calls = 0; calls < consumerArrivals; calls++) {
                     consumerCalls.add(this.callFactory.build(CallType.CONSUMER));
@@ -49,7 +49,7 @@ public class SimulationTask implements Callable<CallSimulationGroup[]> {
 
         System.out.println("Finished simulation number " + this.iteration + " .");
 
-        return new CallSimulationGroup[]{
+        return new IterationSimulationResult[]{
                 consumerCallSimulation,
                 corporateCallSimulation
         };

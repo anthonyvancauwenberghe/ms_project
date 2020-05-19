@@ -1,10 +1,10 @@
-package models;
+package results;
 
 import abstracts.Call;
 
 import java.util.ArrayList;
 
-public class CallGroup {
+public class MinutelyCallResult {
     ArrayList<Call> calls = new ArrayList<>();
 
     public void add(Call call) {

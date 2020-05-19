@@ -1,12 +1,12 @@
-package models;
+package results;
 
 import java.util.List;
 
-public class SimulationResult {
+public class TotalSimulationResult {
 
-    List<CallSimulationGroup> simulations;
+    List<IterationSimulationResult> simulations;
 
-    public SimulationResult(List<CallSimulationGroup> simulations) {
+    public TotalSimulationResult(List<IterationSimulationResult> simulations) {
         this.simulations = simulations;
     }
 

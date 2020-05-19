@@ -1,18 +1,16 @@
-package models;
-
-import enums.CallType;
+package results;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CallSimulationGroup {
-    List<CallGroup> calls = new ArrayList<>();
+public class IterationSimulationResult {
+    List<MinutelyCallResult> calls = new ArrayList<>();
 
-    public void add(int h, int m, CallGroup callGroup) {
-        calls.add(60 * h + m, callGroup);
+    public void add(int h, int m, MinutelyCallResult callGroupResult) {
+        calls.add(60 * h + m, callGroupResult);
     }
 
-    public CallGroup get(int h, int m) {
+    public MinutelyCallResult get(int h, int m) {
         return calls.get(60 * h + m);
     }
 

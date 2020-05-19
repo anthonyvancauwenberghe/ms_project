@@ -1,17 +1,7 @@
-import abstracts.Call;
-import configs.ArrivalRatesConfig;
-import configs.ServiceTimesConfig;
-import enums.CallType;
-import factories.CallFactory;
-import factories.RangeArrivalRateFactory;
-import factories.ServiceTimeFactory;
-import factories.SinusoidArrivalRateFactory;
-import interfaces.IArrivalRateFactory;
 import interfaces.ICallFactory;
 import models.ArrivalRate;
-import models.CallGroup;
-import models.CallSimulationGroup;
-import models.SimulationResult;
+import results.IterationSimulationResult;
+import results.TotalSimulationResult;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -26,8 +16,8 @@ public class Simulation {
 
     protected ICallFactory callFactory;
 
-    protected SimulationResult consumer;
-    protected SimulationResult corporate;
+    protected TotalSimulationResult consumer;
+    protected TotalSimulationResult corporate;
 
     protected boolean executed = false;
 
@@ -48,18 +38,18 @@ public class Simulation {
         System.out.println("found " + threads + " threads. Booting up threadpool..");
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threads);
 
-        List<Future<CallSimulationGroup[]>> results = new ArrayList<>();
+        List<Future<IterationSimulationResult[]>> results = new ArrayList<>();
 
-        LinkedList<CallSimulationGroup> consumerSimulations = new LinkedList<>();
-        LinkedList<CallSimulationGroup> corporateSimulations = new LinkedList<>();
+        LinkedList<IterationSimulationResult> consumerSimulations = new LinkedList<>();
+        LinkedList<IterationSimulationResult> corporateSimulations = new LinkedList<>();
 
         for (int i = 0; i < amount; i++) {
-            Callable<CallSimulationGroup[]> task = new SimulationTask(i, this.consumerArrivalRate, this.corporateArrivalRate, callFactory);
-            Future<CallSimulationGroup[]> result = executor.submit(task);
+            Callable<IterationSimulationResult[]> task = new SimulationTask(i, this.consumerArrivalRate, this.corporateArrivalRate, callFactory);
+            Future<IterationSimulationResult[]> result = executor.submit(task);
             results.add(result);
         }
 
-        for (Future<CallSimulationGroup[]> future : results) {
+        for (Future<IterationSimulationResult[]> future : results) {
             try {
                 consumerSimulations.add(future.get()[0]);
                 corporateSimulations.add(future.get()[1]);
@@ -71,8 +61,8 @@ public class Simulation {
         //shut down the executor service now
         executor.shutdown();
 
-        this.consumer = new SimulationResult(consumerSimulations);
-        this.corporate = new SimulationResult(corporateSimulations);
+        this.consumer = new TotalSimulationResult(consumerSimulations);
+        this.corporate = new TotalSimulationResult(corporateSimulations);
         this.executed = true;
 
         long endTime = System.nanoTime();
@@ -86,14 +76,14 @@ public class Simulation {
         System.out.println("Ran " + amount + " simulations in " + f.format(duration) + " seconds");
     }
 
-    public SimulationResult getConsumer() {
+    public TotalSimulationResult getConsumer() {
         if (!this.executed)
             throw new RuntimeException("Cannot retrieve results run the simulation first.");
 
         return consumer;
     }
 
-    public SimulationResult getCorporate() {
+    public TotalSimulationResult getCorporate() {
         if (!this.executed)
             throw new RuntimeException("Cannot retrieve results run the simulation first.");
 
