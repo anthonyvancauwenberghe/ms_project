@@ -1,6 +1,6 @@
 package factories;
 
-import interfaces.IArrivalRateFactory;
+import contracts.IArrivalRateFactory;
 import models.ArrivalRate;
 
 public class FixedArrivalRateFactory implements IArrivalRateFactory {

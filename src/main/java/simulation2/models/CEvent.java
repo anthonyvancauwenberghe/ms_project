@@ -4,7 +4,9 @@
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-package simulation;
+package simulation2.models;
+
+import simulation2.contracts.CProcess;
 
 public class CEvent
 {

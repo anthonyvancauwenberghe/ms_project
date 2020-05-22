@@ -1,5 +1,6 @@
 package models;
 
+import factories.ArrivalRateToArrivalTimesFactory;
 import statistics.PoissonDistribution;
 
 public class ArrivalRate {
@@ -24,6 +25,11 @@ public class ArrivalRate {
         double rate = this.getArrivalRate(hour, minute);
         PoissonDistribution distribution = new PoissonDistribution(rate);
         return distribution.sample();
+    }
+
+    public double[] sampleInterArrivalTimes(){
+        ArrivalRateToArrivalTimesFactory factory = new ArrivalRateToArrivalTimesFactory(this);
+        return factory.build();
     }
 
     public int[] getArrivalRateSample(int hour, int minute, int size) {

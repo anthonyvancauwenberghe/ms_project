@@ -1,4 +1,6 @@
-package simulation;
+package simulation2.models;
+
+import simulation2.contracts.CProcess;
 
 import java.util.ArrayList;
 
@@ -97,6 +99,7 @@ public class CEventList implements CProcess
 			// Remove the event from the list
 			events.remove(0);
 		}
+		String s = "stopped";
 	}
 
 	public void stop()

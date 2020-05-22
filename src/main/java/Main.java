@@ -1,10 +1,7 @@
 import charts.LineChart;
 import configs.ArrivalRatesConfig;
 import configs.ServiceTimesConfig;
-import configs.SimulationConfig;
-import factories.RangeArrivalRateFactory;
-import factories.SinusoidArrivalRateFactory;
-import factories.ServiceTimeFactory;
+import factories.*;
 import models.ArrivalRate;
 
 public class Main {
@@ -13,7 +10,20 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Simulation simulation = new Simulation(
+
+/*        ArrivalRate consumerArrivalRate = (new SinusoidArrivalRateInSecondsFactory(
+                ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE,
+                ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD,
+                ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_MINUTE_VALUE,
+                ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_HOUR
+        )).build();
+
+        ArrivalRateToArrivalTimesFactory factory = new ArrivalRateToArrivalTimesFactory(consumerArrivalRate);
+        factory.build();*/
+
+
+
+/*        Simulation simulation = new Simulation(
                 SimulationConfig.CONSUMER_ARRIVAL_RATE,
                 SimulationConfig.CORPORATE_ARRIVAL_RATE,
                 SimulationConfig.CALL_FACTORY
@@ -66,20 +76,20 @@ public class Main {
                 "time (hour)",
                 "Rate of calls",
                 simulation.getConsumer().getAverageCallsPerHour()
-        )).render();
+        )).render();*/
 
-        //exploreData();
+        exploreData();
     }
 
     public static void exploreData() {
-        ArrivalRate consumerArrivalRate = (new SinusoidArrivalRateFactory(
+        ArrivalRate consumerArrivalRate = (new SinusoidArrivalRateInSecondsFactory(
                 ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE,
                 ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD,
                 ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_MINUTE_VALUE,
                 ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_HOUR
         )).build();
 
-        ArrivalRate corporateArrivalRate = (new RangeArrivalRateFactory(
+        ArrivalRate corporateArrivalRate = (new RangeArrivalRateInSecondsFactory(
                 ArrivalRatesConfig.CORPORATE_AVG_ARRIVAL_RATE_RANGE)
         ).build();
 
@@ -95,7 +105,7 @@ public class Main {
         LineChart corporateChart = new LineChart("corporate arrival times", "time (minutes)", "Rate of arrivals", corporateArrivalRate.getRates());
         corporateChart.render();
 
-        LineChart consumerChart = new LineChart("consumer arrival times", "time (minutes)", "Rate of arrivals", consumerArrivalRate.getRates());
+        LineChart consumerChart = new LineChart("consumer arrival times", "time (seconds)", "Rate of arrivals", consumerArrivalRate.getRates());
         consumerChart.render();
     }
 

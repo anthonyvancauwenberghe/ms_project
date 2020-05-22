@@ -1,4 +1,6 @@
-package simulation;
+package simulation2.contracts;
+
+import simulation2.models.Product;
 
 /**
  *	Blueprint for accepting products

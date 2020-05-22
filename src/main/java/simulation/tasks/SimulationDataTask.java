@@ -1,11 +1,13 @@
+package simulation.tasks;
+
 import enums.CallType;
-import interfaces.ICallFactory;
+import contracts.ICallFactory;
 import models.ArrivalRate;
 import results.MinutelyCallResult;
 import results.IterationSimulationResult;
 import java.util.concurrent.Callable;
 
-public class SimulationTask implements Callable<IterationSimulationResult[]> {
+public class SimulationDataTask implements Callable<IterationSimulationResult[]> {
 
     protected ArrivalRate consumerArrivalRate;
     protected ArrivalRate corporateArrivalRate;
@@ -14,7 +16,7 @@ public class SimulationTask implements Callable<IterationSimulationResult[]> {
 
     protected int iteration;
 
-    public SimulationTask(int iteration, ArrivalRate consumerArrivalRate, ArrivalRate corporateArrivalRate, ICallFactory callFactory) {
+    public SimulationDataTask(int iteration, ArrivalRate consumerArrivalRate, ArrivalRate corporateArrivalRate, ICallFactory callFactory) {
         this.iteration = iteration;
         this.consumerArrivalRate = consumerArrivalRate;
         this.corporateArrivalRate = corporateArrivalRate;

@@ -1,8 +1,9 @@
 package factories;
 
+import contracts.Distribution;
 import statistics.LeftTruncatedNormalDistribution;
 import statistics.NormalDistribution;
-import interfaces.IServiceTimeFactory;
+import contracts.IServiceTimeFactory;
 
 public class ServiceTimeFactory implements IServiceTimeFactory {
 
@@ -20,6 +21,10 @@ public class ServiceTimeFactory implements IServiceTimeFactory {
         this.leftTruncValue = leftTruncValue;
 
         this.distribution = new LeftTruncatedNormalDistribution(this.mean, this.std, this.leftTruncValue);
+    }
+
+    public Distribution getDistribution(){
+        return this.distribution;
     }
 
     public double build() {

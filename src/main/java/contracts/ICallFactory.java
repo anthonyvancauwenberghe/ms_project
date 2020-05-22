@@ -1,6 +1,6 @@
-package interfaces;
+package contracts;
 
-import abstracts.Call;
+import models.Call;
 import enums.CallType;
 
 public interface ICallFactory {

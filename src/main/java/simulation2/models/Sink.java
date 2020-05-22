@@ -1,6 +1,9 @@
-package simulation;
+package simulation2.models;
+
+import simulation2.contracts.ProductAcceptor;
 
 import java.util.ArrayList;
+
 /**
  *	A sink
  *	@author Joel Karel
@@ -10,16 +13,19 @@ public class Sink implements ProductAcceptor
 {
 	/** All products are kept */
 	private ArrayList<Product> products;
+
 	/** All properties of products are kept */
 	private ArrayList<Integer> numbers;
 	private ArrayList<Double> times;
 	private ArrayList<String> events;
 	private ArrayList<String> stations;
+
 	/** Counter to number products */
 	private int number;
+
 	/** Name of the sink */
 	private String name;
-	
+
 	/**
 	*	Constructor, creates objects
 	*/

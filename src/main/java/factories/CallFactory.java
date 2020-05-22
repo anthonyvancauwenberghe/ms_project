@@ -1,10 +1,8 @@
 package factories;
 
-import abstracts.Call;
+import models.Call;
 import enums.CallType;
-import interfaces.ICallFactory;
-import models.ConsumerCall;
-import models.CorporateCall;
+import contracts.ICallFactory;
 
 public class CallFactory implements ICallFactory {
 
@@ -19,19 +17,11 @@ public class CallFactory implements ICallFactory {
     public Call build(CallType type) {
         switch (type) {
             case CORPORATE:
-                return this.createCorporateCall();
+                return new Call(this.corporateServiceTime.build(), CallType.CORPORATE);
             case CONSUMER:
-                return this.createConsumerCall();
+                return new Call(this.consumerServiceTime.build(), CallType.CONSUMER);
             default:
                 throw new RuntimeException("not a valid call type");
         }
-    }
-
-    protected ConsumerCall createConsumerCall() {
-        return new ConsumerCall(this.consumerServiceTime.build());
-    }
-
-    protected CorporateCall createCorporateCall() {
-        return new CorporateCall(this.corporateServiceTime.build());
     }
 }

@@ -1,4 +1,4 @@
-package simulation;
+package simulation2.contracts;
 
 /**
  *	Blueprint for processes

@@ -1,32 +1,40 @@
-package simulation;
+package simulation2.models;
 
 import java.util.ArrayList;
+
 /**
  *	Product that is send trough the system
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-class Product
+public class Product
 {
 	/** Stamps for the products */
 	private ArrayList<Double> times;
 	private ArrayList<String> events;
 	private ArrayList<String> stations;
+
+	private final ProductType type;
 	
 	/** 
 	*	Constructor for the product
 	*	Mark the time at which it is created
-	*	@param create The current time
+	*	create The current time
 	*/
-	public Product()
+	public Product(ProductType type)
 	{
 		times = new ArrayList<>();
 		events = new ArrayList<>();
 		stations = new ArrayList<>();
+
+		this.type = type;
 	}
-	
-	
-	public void stamp(double time,String event,String station)
+
+	public ProductType type() {
+		return this.type;
+	}
+
+	public void stamp(double time, String event, String station)
 	{
 		times.add(time);
 		events.add(event);

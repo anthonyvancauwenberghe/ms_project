@@ -1,6 +1,6 @@
 package statistics;
 
-import interfaces.Distribution;
+import contracts.Distribution;
 
 import java.util.Random;
 
@@ -22,6 +22,8 @@ public class NormalDistribution implements Distribution {
     }
 
     public double sample() {
+        this.rng.nextGaussian();
+        this.rng.nextDouble();
         return this.mean + this.rng.nextGaussian() * this.std;
     }
 
