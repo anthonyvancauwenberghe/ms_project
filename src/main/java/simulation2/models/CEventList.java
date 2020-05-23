@@ -63,6 +63,10 @@ public class CEventList implements CProcess
 		}
 	}
 
+	public void clear(){
+		this.events.clear();
+	}
+
 	/**
 	*	Method for starting the eventlist.
 	*	It will run until a full day has passed or no more events in the list are present.

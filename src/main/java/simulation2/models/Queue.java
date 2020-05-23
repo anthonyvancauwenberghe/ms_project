@@ -35,7 +35,7 @@ public class Queue implements ProductAcceptor, CProcess {
     }
 
     protected void addHourlyRequeueEvents(CEventList eventList) {
-        for (int i = 1; i < 24; i++) {
+        for (int i = 0; i < 24; i++) {
             eventList.add(this, 20, 3600 * i + 0.1);
         }
     }

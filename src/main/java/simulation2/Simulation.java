@@ -41,7 +41,7 @@ public class Simulation {
 
 
         // start the eventlist
-       // this.events.start(24 * 60 * 60);
+        this.eventList.start();
 
         //  si.getTimes()
         System.out.println("------------------------------");
@@ -73,8 +73,10 @@ public class Simulation {
     public void warmUpQueue(){
         for(int i=0; i<100; i++){
             this.eventList.start();
+            this.eventList.clear();
         }
-        new Sink("data");
+
+        this.sink = new Sink("data");
 
     }
 
