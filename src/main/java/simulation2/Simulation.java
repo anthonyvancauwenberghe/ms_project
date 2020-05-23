@@ -8,75 +8,110 @@
 package simulation2;
 
 import configs.SimulationConfig;
-import contracts.Distribution;
-import models.ArrivalRate;
-import simulation2.abstracts.AgentFactory;
-import simulation2.factories.ConsumerCSAFactory;
-import simulation2.factories.CorporateCSAFactory;
+import simulation2.enums.AgentShift;
+import simulation2.enums.AgentType;
+import simulation2.enums.ProductType;
+import simulation2.factories.AgentFactory;
 import simulation2.models.*;
 
 public class Simulation {
 
-    protected ArrivalRate consumerArrivalRate;
-    protected ArrivalRate corporateArrivalRate;
+    protected final Queue consumerQueue;
+    protected final Queue corporateQueue;
 
-    protected Distribution<Double> consumerServiceTimeDistribution;
-    protected Distribution<Double> corporateServiceTimeDistribution;
+    protected Sink sink;
 
-    public Simulation(ArrivalRate consumerArrivalRate, ArrivalRate corporateArrivalRate, Distribution<Double> consumerServiceTimeDistribution, Distribution<Double> corporateServiceTimeDistribution) {
-        this.consumerArrivalRate = consumerArrivalRate;
-        this.corporateArrivalRate = corporateArrivalRate;
-        this.consumerServiceTimeDistribution = consumerServiceTimeDistribution;
-        this.corporateServiceTimeDistribution = corporateServiceTimeDistribution;
+    protected final CEventList eventList;
+
+    public Simulation() {
+        this.eventList = new CEventList();
+        this.consumerQueue  = new Queue(this.eventList);
+        this.corporateQueue = new Queue(this.eventList);
+        this.sink = new Sink("data");
     }
 
     public void run() {
+       this.initSources();
 
-        // Create an eventlist
-        CEventList l = new CEventList();
+        this.initMorningShift();
+        this.initNoonShift();
+        this.initNightShift();
 
-        // A queue for the machine
-        Queue q = new Queue();
+        this.warmUpQueue();
 
-        double[] iaConsumers = this.consumerArrivalRate.sampleInterArrivalTimes();
-        double[] iaCorporate= this.corporateArrivalRate.sampleInterArrivalTimes();
 
+        // start the eventlist
+       // this.events.start(24 * 60 * 60);
+
+        //  si.getTimes()
+        System.out.println("------------------------------");
+        System.out.println(corporateQueue.remaining() + " corporate calls left in queue");
+        System.out.println(consumerQueue.remaining() + " consumer calls left in queue");
+        System.out.println(consumerQueue.remaining() + corporateQueue.remaining() + " total calls left in queue");
+
+        String t = "test";
+    }
+
+    public void initSources() {
         new Source(
-                q,
-                l,
-                "consumer_call_generator",
-                iaConsumers,
+                this.consumerQueue,
+                this.eventList,
+                "CONSUMER_CALL_SOURCE",
+                SimulationConfig.CONSUMER_ARRIVAL_RATE.sampleInterArrivalTimes(),
                 ProductType.CONSUMER
         );
 
         new Source(
-                q,
-                l,
-                "corporate_call_generator",
-                iaCorporate,
+                this.corporateQueue,
+                this.eventList,
+                "CORPORATE_CALL_SOURCE",
+                SimulationConfig.CORPORATE_ARRIVAL_RATE.sampleInterArrivalTimes(),
                 ProductType.CORPORATE
         );
+    }
 
-        // A sink
-        Sink si = new Sink("Sink 1");
+    public void warmUpQueue(){
+        for(int i=0; i<100; i++){
+            this.eventList.start();
+        }
+        new Sink("data");
 
-        AgentFactory corporateCSAFactory = new CorporateCSAFactory(q, si, l);
-        corporateCSAFactory.build(0);
-
-        AgentFactory consumerCSAFactory = new ConsumerCSAFactory(q, si, l);
-        consumerCSAFactory.build(1000);
+    }
 
 
-        // start the eventlist
-        l.start(24 * 60 * 60);
+    public void initMorningShift() {
+        //CORPORATE WORKERS ASSIGNED TO THE CORPORATE QUEUE
+        (new AgentFactory(this.corporateQueue, this.sink, this.eventList, AgentType.CORPORATE, AgentShift.MORNING)).build(2);
 
-        //  si.getTimes()
-        System.out.println("------------------------------");
-        System.out.println(q.remaining(ProductType.CORPORATE) + " corporate calls left in queue");
-        System.out.println(q.remaining(ProductType.CONSUMER) + " consumer calls left in queue");
-        System.out.println(q.remaining() + " total calls left in queue");
+        //CORPORATE WORKERS ASSIGNED TO THE CONSUMER QUEUE
+        (new AgentFactory(this.consumerQueue, this.sink, this.eventList, AgentType.CORPORATE, AgentShift.MORNING)).build(0);
 
-        String t = "test";
+        //CONSUMER WORKERS ASSIGNED TO THE CONSUMER QUEUE
+        (new AgentFactory(this.consumerQueue, this.sink, this.eventList, AgentType.CONSUMER, AgentShift.MORNING)).build(4);
+    }
+
+
+    public void initNoonShift() {
+        //CORPORATE WORKERS ASSIGNED TO THE CORPORATE QUEUE
+        (new AgentFactory(this.corporateQueue, this.sink, this.eventList, AgentType.CORPORATE, AgentShift.NOON)).build(2);
+
+        //CORPORATE WORKERS ASSIGNED TO THE CONSUMER QUEUE
+        (new AgentFactory(this.consumerQueue, this.sink, this.eventList, AgentType.CORPORATE, AgentShift.NOON)).build(0);
+
+        //CONSUMER WORKERS ASSIGNED TO THE CONSUMER QUEUE
+        (new AgentFactory(this.consumerQueue, this.sink, this.eventList, AgentType.CONSUMER, AgentShift.NOON)).build(4);
+    }
+
+
+    public void initNightShift() {
+        //CORPORATE WORKERS ASSIGNED TO THE CORPORATE QUEUE
+        (new AgentFactory(this.corporateQueue, this.sink, this.eventList, AgentType.CORPORATE, AgentShift.NIGHT)).build(2);
+
+        //CORPORATE WORKERS ASSIGNED TO THE CONSUMER QUEUE
+        (new AgentFactory(this.consumerQueue, this.sink, this.eventList, AgentType.CORPORATE, AgentShift.NIGHT)).build(0);
+
+        //CONSUMER WORKERS ASSIGNED TO THE CONSUMER QUEUE
+        (new AgentFactory(this.consumerQueue, this.sink, this.eventList, AgentType.CONSUMER, AgentShift.NIGHT)).build(4);
     }
 
 
@@ -86,10 +121,7 @@ public class Simulation {
     public static void main(String[] args) {
 
         Simulation sim = new Simulation(
-                SimulationConfig.CONSUMER_ARRIVAL_RATE,
-                SimulationConfig.CORPORATE_ARRIVAL_RATE,
-                SimulationConfig.CONSUMER_SERVICE_DISTRIBUTION,
-                SimulationConfig.CORPORATE_SERVICE_DISTRIBUTION
+
         );
 
         sim.run();

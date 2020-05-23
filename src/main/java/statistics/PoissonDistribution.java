@@ -6,6 +6,9 @@ import java.util.Random;
 
 public class PoissonDistribution implements Distribution<Integer> {
 
+
+
+
     protected double mean;
 
     protected Random rng = new Random();

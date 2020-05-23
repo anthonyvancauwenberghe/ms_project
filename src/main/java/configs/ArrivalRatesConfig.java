@@ -1,7 +1,7 @@
 package configs;
 
 public class ArrivalRatesConfig {
-    public static final double CONSUMER_AVG_MINUTE_ARRIVAL_RATE = 0.1;
+    public static final double CONSUMER_AVG_MINUTE_ARRIVAL_RATE = 2;
     public static final double CONSUMER_ARRIVAL_RATE_PERIOD = 24;
     public static final double CONSUMER_ARRIVAL_LOWEST_HOUR = 3;
     public static final double CONSUMER_ARRIVAL_LOWEST_MINUTE_VALUE = 0.2;

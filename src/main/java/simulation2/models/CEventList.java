@@ -62,33 +62,14 @@ public class CEventList implements CProcess
 			events.add(evnt);
 		}
 	}
-	
-	/**
-	*	Method for starting the eventlist.
-	*	It will run until there are no longer events in the list
-	*/
-	public void start()
-	{
-		// stop criterion
-		while((events.size()>0)&&(!stopFlag))
-		{
-			// Make the similation time equal to the execution time of the first event in the list that has to be processed
-			currentTime=events.get(0).getExecutionTime();
-			// Let the element be processed
-			events.get(0).execute();
-			// Remove the event from the list
-			events.remove(0);
-		}
-	}
 
 	/**
 	*	Method for starting the eventlist.
-	*	It will run until there are no longer events in the list or that a maximum time has elapsed
-	*	@param mx De maximum time of the simulation
+	*	It will run until a full day has passed or no more events in the list are present.
 	*/
-	public void start(double mx)
+	public void start()
 	{
-		add(this,-1,mx);
+		add(this,-1,24*60*60);
 		// stop criterion
 		while((events.size()>0)&&(!stopFlag))
 		{
@@ -99,7 +80,6 @@ public class CEventList implements CProcess
 			// Remove the event from the list
 			events.remove(0);
 		}
-		String s = "stopped";
 	}
 
 	public void stop()

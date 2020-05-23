@@ -1,5 +1,7 @@
 package simulation2.models;
 
+import simulation2.enums.ProductType;
+
 import java.util.ArrayList;
 
 /**

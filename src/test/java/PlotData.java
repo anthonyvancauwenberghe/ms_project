@@ -10,8 +10,8 @@ import statistics.NormalDistribution;
 public class PlotData {
 
     public static void main(String[] args) {
-        plotCorporateArrivals();
-        //plotConsumerArrivals();
+        //plotCorporateArrivals();
+        plotConsumerArrivals();
 
         //plotConsumerServiceTime();
         //plotCorporateServiceTime();

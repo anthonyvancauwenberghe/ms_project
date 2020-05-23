@@ -18,17 +18,17 @@ public abstract class Machine implements CProcess, ProductAcceptor {
     /**
      * Eventlist that will manage events
      */
-    private final CEventList eventlist;
+    protected final CEventList eventlist;
 
     /**
      * Queue from which the machine has to take products
      */
-    private final Queue queue;
+    protected final Queue queue;
 
     /**
      * Sink to dump products
      */
-    private final ProductAcceptor sink;
+    protected final ProductAcceptor sink;
 
     /**
      * Status of the machine (idle | busy)
@@ -38,7 +38,7 @@ public abstract class Machine implements CProcess, ProductAcceptor {
     /**
      * Machine name
      */
-    private final String name;
+    protected final String name;
 
 
 

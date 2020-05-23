@@ -2,6 +2,7 @@ package simulation2.models;
 
 import simulation2.contracts.CProcess;
 import simulation2.contracts.ProductAcceptor;
+import simulation2.enums.ProductType;
 
 /**
  * A source of products

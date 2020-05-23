@@ -1,4 +1,4 @@
-package simulation2.models;
+package simulation2.enums;
 
 import configs.SimulationConfig;
 import contracts.Distribution;

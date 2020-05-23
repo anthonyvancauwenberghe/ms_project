@@ -32,5 +32,86 @@ public class SimulationConfig {
     public static final int costPerHourCorporateAgent = 60;
     public static final int costPerHourConsumerAgent = 35;
 
+    public static final boolean[] MORNING_SHIFT = {
+            false, //0-1
+            false, //1-2
+            false, //2-3
+            false, //3-4
+            false, //4-5
+            false, //5-6
+            true, //6-7
+            true, //7-8
+            true, //8-9
+            true, //9-10
+            true, //10-11
+            true, //11-12
+            true, //12-13
+            true, //13-14
+            false, //14-15
+            false, //15-16
+            false, //16-17
+            false, //17-18
+            false, //18-19
+            false, //19-20
+            false, //20-21
+            false, //21-22
+            false, //22-23
+            false, //23-24
+    };
+
+    public static final boolean[] NOON_SHIFT = {
+            false, //0-1
+            false, //1-2
+            false, //2-3
+            false, //3-4
+            false, //4-5
+            false, //5-6
+            false, //6-7
+            false, //7-8
+            false, //8-9
+            false, //9-10
+            false, //10-11
+            false, //11-12
+            false, //12-13
+            false, //13-14
+            true, //14-15
+            true, //15-16
+            true, //16-17
+            true, //17-18
+            true, //18-19
+            true, //19-20
+            true, //20-21
+            true, //21-22
+            false, //22-23
+            false, //23-24
+    };
+
+    public static final boolean[] NIGHT_SHIFT = {
+            true, //0-1
+            true, //1-2
+            true, //2-3
+            true, //3-4
+            true, //4-5
+            true, //5-6
+            false, //6-7
+            false, //7-8
+            false, //8-9
+            false, //9-10
+            false, //10-11
+            false, //11-12
+            false, //12-13
+            false, //13-14
+            false, //14-15
+            false, //15-16
+            false, //16-17
+            false, //17-18
+            false, //18-19
+            false, //19-20
+            false, //20-21
+            false, //21-22
+            true, //22-23
+            true, //23-24
+    };
+
 
 }
