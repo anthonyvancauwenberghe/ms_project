@@ -13,14 +13,22 @@ import javax.swing.*;
 public class LineChart extends JFrame {
     private static final long serialVersionUID = 6294689542092367723L;
 
+    JFreeChart chart;
+
+    ChartPanel panel;
+
+    protected String XAxxis;
+
     public LineChart(String title, String XAxis, String YAxxis, double[] data) {
         super(title);
+
+        this.XAxxis = XAxis;
 
         // Create dataset
         XYDataset dataset = createDataset(data, XAxis);
 
         // Create chart
-        JFreeChart chart = ChartFactory.createXYLineChart(
+        this.chart = ChartFactory.createXYLineChart(
                 title,
                 XAxis,
                 YAxxis,
@@ -29,8 +37,14 @@ public class LineChart extends JFrame {
                 true, true, false);
 
         // Create Panel
-        ChartPanel panel = new ChartPanel(chart);
+        this.panel = new ChartPanel(chart);
         setContentPane(panel);
+    }
+
+    public void updateDataSet(double[] dataset){
+        this.createDataset(dataset, this.XAxxis);
+        chart.getXYPlot().setDataset(chart.getXYPlot().getDataset());
+        this.panel.getChart().fireChartChanged();
     }
 
     private XYDataset createDataset(double[] data, String Xaxxis) {
@@ -40,6 +54,8 @@ public class LineChart extends JFrame {
         for (int i = 0; i < data.length; i++) {
             series.add(i, data[i]);
         }
+
+        dataset.removeAllSeries();
 
         //Add series to dataset
         dataset.addSeries(series);

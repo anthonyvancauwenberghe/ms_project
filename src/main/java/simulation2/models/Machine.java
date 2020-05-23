@@ -1,12 +1,14 @@
 package simulation2.models;
 
+import configs.SimulationConfig;
 import simulation2.contracts.CProcess;
 import simulation2.contracts.ProductAcceptor;
 
 
 /**
  * Cleaned up implementation of the Machine model.
- *	@author Joel Karel
+ *
+ * @author Joel Karel
  */
 public abstract class Machine implements CProcess, ProductAcceptor {
 
@@ -41,7 +43,6 @@ public abstract class Machine implements CProcess, ProductAcceptor {
     protected final String name;
 
 
-
     public Machine(Queue q, ProductAcceptor s, CEventList e, String n) {
         queue = q;
         sink = s;
@@ -53,7 +54,9 @@ public abstract class Machine implements CProcess, ProductAcceptor {
     @Override
     public void execute(int type, double tme) {
         // show arrival
-        System.out.println("Product finished at time = " + tme);
+
+        if (SimulationConfig.DEBUG)
+            System.out.println("Product finished at time = " + tme);
 
         // Remove product from system
         product.stamp(tme, "Production complete", name);

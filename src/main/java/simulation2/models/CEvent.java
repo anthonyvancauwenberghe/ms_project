@@ -7,6 +7,7 @@
  */
 package simulation2.models;
 
+import configs.SimulationConfig;
 import simulation2.contracts.CProcess;
 
 public class CEvent {
@@ -33,7 +34,7 @@ public class CEvent {
      *	Method to signal the target to execute an event
      */
     public void execute() {
-        if (type == 20)
+        if (type == 20 && SimulationConfig.DEBUG)
             System.out.println("reaccepting machines on queue at " + this.executionTime);
         target.execute(type, executionTime);
     }

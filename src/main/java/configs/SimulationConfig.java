@@ -6,7 +6,9 @@ import models.ArrivalRate;
 
 public class SimulationConfig {
 
-    public static final int SIMULATION_COUNT = 1000;
+    public static final int SIMULATION_COUNT = 200;
+
+    public static final boolean DEBUG = false;
 
     public static final CallFactory CALL_FACTORY = new CallFactory(
             new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT),
@@ -29,8 +31,17 @@ public class SimulationConfig {
     public static final Distribution<Double> CORPORATE_SERVICE_DISTRIBUTION = (new ServiceTimeFactory(ServiceTimesConfig.CORPORATE_SERVICE_TIME_MEAN, ServiceTimesConfig.CORPORATE_SERVICE_TIME_STD, ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT)).getDistribution();
 
 
-    public static final int costPerHourCorporateAgent = 60;
-    public static final int costPerHourConsumerAgent = 35;
+    public static final double costPerHourCorporateAgent = 60.0;
+    public static final double costPerHourConsumerAgent = 35.0;
+
+    public static final int MORNING_CONSUMER_AGENTS = 5;
+    public static final int MORNING_CORPORATE_AGENTS = 3;
+
+    public static final int NOON_CONSUMER_AGENTS = 4;
+    public static final int NOON_CORPORATE_AGENTS = 3;
+
+    public static final int NIGHT_CONSUMER_AGENTS = 2;
+    public static final int NIGHT_CORPORATE_AGENTS = 2;
 
     public static final boolean[] MORNING_SHIFT = {
             false, //0-1

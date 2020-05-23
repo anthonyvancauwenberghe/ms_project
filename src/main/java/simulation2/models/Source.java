@@ -1,5 +1,6 @@
 package simulation2.models;
 
+import configs.SimulationConfig;
 import simulation2.contracts.CProcess;
 import simulation2.contracts.ProductAcceptor;
 import simulation2.enums.ProductType;
@@ -37,7 +38,7 @@ public class Source implements CProcess {
     /**
      * Interarrival time iterator
      */
-    private int interArrCnt = 0;
+    protected int interArrCnt;
 
     /**
      * Distribution from which the the duration to process the product is sampled
@@ -61,6 +62,11 @@ public class Source implements CProcess {
 
         this.productType = type;
 
+        this.init();
+    }
+
+    public void init() {
+        this.interArrCnt = 0;
         // put first event in list for initialization
         this.list.add(this, 0, interarrivalTimes[0]); //target,type,time
     }
@@ -69,12 +75,13 @@ public class Source implements CProcess {
     public void execute(int type, double tme) {
 
         if (interArrCnt >= interarrivalTimes.length - 1) {
-            System.out.println("No more arrivals.. Reached end of arrival time list at source " + this.name);
+            if (SimulationConfig.DEBUG)
+                System.out.println("No more arrivals.. Reached end of arrival time list at source " + this.name);
             return;
         }
 
-        // show arrival
-        System.out.println(this.productType.toString() +" call came in at time: " + tme);
+        if (SimulationConfig.DEBUG)
+            System.out.println(this.productType.toString() + " call came in at time: " + tme);
 
         // give arrived product to queue
         Product p = new Product(this.productType);

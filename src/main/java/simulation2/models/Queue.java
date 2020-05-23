@@ -27,17 +27,14 @@ public class Queue implements ProductAcceptor, CProcess {
      * Initializes the queue and introduces a dummy machine
      * the machine has to be specified later
      */
-    public Queue(CEventList eventList) {
+    public Queue() {
         this.products = new ArrayList<>();
         this.processors = new ArrayList<>();
 
-        this.addHourlyRequeueEvents(eventList);
     }
 
-    protected void addHourlyRequeueEvents(CEventList eventList) {
-        for (int i = 0; i < 24; i++) {
-            eventList.add(this, 20, 3600 * i + 0.1);
-        }
+    public ArrayList<Product> getProducts(){
+        return this.products;
     }
 
     /**

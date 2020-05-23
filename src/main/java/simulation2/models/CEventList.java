@@ -64,6 +64,8 @@ public class CEventList implements CProcess
 	}
 
 	public void clear(){
+		currentTime = 0;
+		stopFlag = false;
 		this.events.clear();
 	}
 
