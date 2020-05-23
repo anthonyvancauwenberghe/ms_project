@@ -31,7 +31,7 @@ public class ServiceTimeFactory implements IServiceTimeFactory {
         return this.distribution.sample();
     }
 
-    public double[] build(int size) {
+    public Double[] build(int size) {
 
         return this.distribution.sample(size);
     }

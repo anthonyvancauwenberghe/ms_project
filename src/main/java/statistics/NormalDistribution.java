@@ -4,7 +4,7 @@ import contracts.Distribution;
 
 import java.util.Random;
 
-public class NormalDistribution implements Distribution {
+public class NormalDistribution implements Distribution<Double> {
 
     protected double mean;
     protected double std;
@@ -21,14 +21,14 @@ public class NormalDistribution implements Distribution {
         this.std = std;
     }
 
-    public double sample() {
+    public Double sample() {
         this.rng.nextGaussian();
         this.rng.nextDouble();
         return this.mean + this.rng.nextGaussian() * this.std;
     }
 
-    public double[] sample(int size) {
-        double[] samples = new double[size];
+    public Double[] sample(int size) {
+        Double[] samples = new Double[size];
         for (int i = 0; i < size; i++) {
             samples[i] = this.sample();
         }

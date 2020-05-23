@@ -17,7 +17,7 @@ public class LeftTruncatedNormalDistribution extends NormalDistribution {
     }
 
     @Override
-    public double sample() {
+    public Double sample() {
         double sample = super.sample();
         return sample < this.leftTruncatedValue ? this.sample() : sample;
     }

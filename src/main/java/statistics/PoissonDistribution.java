@@ -1,28 +1,41 @@
 package statistics;
 
-import org.apache.commons.math3.exception.NotStrictlyPositiveException;
-import org.apache.commons.math3.random.RandomGenerator;
+import contracts.Distribution;
 
-//TODO implement our own poissondistribution
-public class PoissonDistribution extends org.apache.commons.math3.distribution.PoissonDistribution {
+import java.util.Random;
 
-    public PoissonDistribution(double p) throws NotStrictlyPositiveException {
-        super(p);
+public class PoissonDistribution implements Distribution<Integer> {
+
+    protected double mean;
+
+    protected Random rng = new Random();
+
+    public PoissonDistribution(double mean) {
+        this.mean = mean;
     }
 
-    public PoissonDistribution(double p, double epsilon, int maxIterations) throws NotStrictlyPositiveException {
-        super(p, epsilon, maxIterations);
+    public Integer sample() {
+        double lambda = Math.exp(-this.mean);
+        double lambda2 = 1;
+        int n = 0;
+
+        for (double random = 0; (double) n < 1000 * this.mean; ++n) {
+            random = this.rng.nextDouble();
+            lambda2 *= random;
+            if (lambda2 < lambda) {
+                return n;
+            }
+        }
+
+        return n;
     }
 
-    public PoissonDistribution(RandomGenerator rng, double p, double epsilon, int maxIterations) throws NotStrictlyPositiveException {
-        super(rng, p, epsilon, maxIterations);
-    }
+    public Integer[] sample(int size) {
+        Integer[] numbers = new Integer[size];
 
-    public PoissonDistribution(double p, double epsilon) throws NotStrictlyPositiveException {
-        super(p, epsilon);
-    }
-
-    public PoissonDistribution(double p, int maxIterations) {
-        super(p, maxIterations);
+        for (int i = 0; i < size; i++) {
+            numbers[i] = this.sample();
+        }
+        return numbers;
     }
 }

@@ -1,8 +1,3 @@
-import charts.LineChart;
-import configs.ArrivalRatesConfig;
-import configs.ServiceTimesConfig;
-import factories.*;
-import models.ArrivalRate;
 
 public class Main {
 
@@ -78,35 +73,6 @@ public class Main {
                 simulation.getConsumer().getAverageCallsPerHour()
         )).render();*/
 
-        exploreData();
-    }
-
-    public static void exploreData() {
-        ArrivalRate consumerArrivalRate = (new SinusoidArrivalRateInSecondsFactory(
-                ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE,
-                ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD,
-                ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_MINUTE_VALUE,
-                ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_HOUR
-        )).build();
-
-        ArrivalRate corporateArrivalRate = (new RangeArrivalRateInSecondsFactory(
-                ArrivalRatesConfig.CORPORATE_AVG_ARRIVAL_RATE_RANGE)
-        ).build();
-
-        ServiceTimeFactory consumerServiceTime = (new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT));
-        ServiceTimeFactory corporateServiceTime = (new ServiceTimeFactory(ServiceTimesConfig.CORPORATE_SERVICE_TIME_MEAN, ServiceTimesConfig.CORPORATE_SERVICE_TIME_STD, ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT));
-
-        LineChart consumerServiceTimeChart = new LineChart("Consumer Service time density", "time (seconds)", "Probability", consumerServiceTime.probabilities(500));
-        consumerServiceTimeChart.render();
-
-        LineChart corporateServiceTimeChart = new LineChart("Corporate Service time density", "time (seconds)", "Probability", corporateServiceTime.probabilities(500));
-        corporateServiceTimeChart.render();
-
-        LineChart corporateChart = new LineChart("corporate arrival times", "time (minutes)", "Rate of arrivals", corporateArrivalRate.getRates());
-        corporateChart.render();
-
-        LineChart consumerChart = new LineChart("consumer arrival times", "time (seconds)", "Rate of arrivals", consumerArrivalRate.getRates());
-        consumerChart.render();
     }
 
 

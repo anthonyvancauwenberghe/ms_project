@@ -97,7 +97,7 @@ public abstract class Machine implements CProcess, ProductAcceptor {
     private void startProduction(Product product) {
 
         // generate duration
-        double duration = product.type().getServiceTimeDistribution().sample();
+        double duration = (double)product.type().getServiceTimeDistribution().sample();
 
         // Create a new event in the eventlist
         double tme = eventlist.getTime();

@@ -1,8 +1,8 @@
 package contracts;
 
-public interface Distribution {
+public interface Distribution<T> {
 
-    public double sample();
+    public T sample();
 
-    public double[] sample(int size);
+    public T[] sample(int size);
 }

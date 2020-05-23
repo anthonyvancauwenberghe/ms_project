@@ -32,7 +32,7 @@ public class ArrivalRate {
         return factory.build();
     }
 
-    public int[] getArrivalRateSample(int hour, int minute, int size) {
+    public Integer[] getArrivalRateSample(int hour, int minute, int size) {
         double rate = this.getArrivalRate(hour, minute);
         PoissonDistribution distribution = new PoissonDistribution(rate);
         return distribution.sample(size);
