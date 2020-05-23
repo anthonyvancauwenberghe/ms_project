@@ -7,15 +7,15 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class ArrivalRateToArrivalTimesFactory {
+public class InterArrivalTimesFactory {
     protected final ArrivalRate rate;
 
-    public ArrivalRateToArrivalTimesFactory(ArrivalRate arrivalRate) {
+    public InterArrivalTimesFactory(ArrivalRate arrivalRate) {
         this.rate = arrivalRate;
     }
 
     public double[] build() {
-        List<Double> times = new LinkedList<Double>();
+        List<Double> times = new LinkedList<>();
 
         double counter = 0;
 

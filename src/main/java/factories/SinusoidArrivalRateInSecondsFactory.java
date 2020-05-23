@@ -20,11 +20,11 @@ public class SinusoidArrivalRateInSecondsFactory implements IArrivalRateFactory 
     }
 
     public ArrivalRate build() {
-            double[] data = new double[24 * 60*60];
-            double lambda = this.lambda/60;
-            double period = this.period * 60*60;
-            double minRateTime = this.minRateTime * 60*60;
-            double minRateValue = this.minRateValue /60;
+        double[] data = new double[24 * 60 * 60];
+        double lambda = this.lambda / 60;
+        double period = this.period * 60 * 60;
+        double minRateTime = this.minRateTime * 60 * 60;
+        double minRateValue = this.minRateValue / 60;
 
             for (int h = 0; h < 24; h++) {
                 for (int m = 0; m < 60; m++) {

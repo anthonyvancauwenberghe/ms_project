@@ -23,7 +23,7 @@ public class ServiceTimeFactory implements IServiceTimeFactory {
         this.distribution = new LeftTruncatedNormalDistribution(this.mean, this.std, this.leftTruncValue);
     }
 
-    public Distribution getDistribution(){
+    public Distribution<Double> getDistribution(){
         return this.distribution;
     }
 
@@ -32,7 +32,6 @@ public class ServiceTimeFactory implements IServiceTimeFactory {
     }
 
     public Double[] build(int size) {
-
         return this.distribution.sample(size);
     }
 

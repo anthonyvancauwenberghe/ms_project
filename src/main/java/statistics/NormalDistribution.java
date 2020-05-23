@@ -22,8 +22,6 @@ public class NormalDistribution implements Distribution<Double> {
     }
 
     public Double sample() {
-        this.rng.nextGaussian();
-        this.rng.nextDouble();
         return this.mean + this.rng.nextGaussian() * this.std;
     }
 

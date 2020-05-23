@@ -25,6 +25,12 @@ public class SimulationConfig {
     )).build();
 
 
-    public static final Distribution CONSUMER_SERVICE_DISTRIBUTION = (new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT)).getDistribution();
-    public static final Distribution CORPORATE_SERVICE_DISTRIBUTION = (new ServiceTimeFactory(ServiceTimesConfig.CORPORATE_SERVICE_TIME_MEAN, ServiceTimesConfig.CORPORATE_SERVICE_TIME_STD, ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT)).getDistribution();
+    public static final Distribution<Double> CONSUMER_SERVICE_DISTRIBUTION = (new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT)).getDistribution();
+    public static final Distribution<Double> CORPORATE_SERVICE_DISTRIBUTION = (new ServiceTimeFactory(ServiceTimesConfig.CORPORATE_SERVICE_TIME_MEAN, ServiceTimesConfig.CORPORATE_SERVICE_TIME_STD, ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT)).getDistribution();
+
+
+    public static final int costPerHourCorporateAgent = 60;
+    public static final int costPerHourConsumerAgent = 35;
+
+
 }

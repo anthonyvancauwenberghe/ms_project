@@ -20,10 +20,10 @@ public class Simulation {
     protected ArrivalRate consumerArrivalRate;
     protected ArrivalRate corporateArrivalRate;
 
-    protected Distribution consumerServiceTimeDistribution;
-    protected Distribution corporateServiceTimeDistribution;
+    protected Distribution<Double> consumerServiceTimeDistribution;
+    protected Distribution<Double> corporateServiceTimeDistribution;
 
-    public Simulation(ArrivalRate consumerArrivalRate, ArrivalRate corporateArrivalRate, Distribution consumerServiceTimeDistribution, Distribution corporateServiceTimeDistribution) {
+    public Simulation(ArrivalRate consumerArrivalRate, ArrivalRate corporateArrivalRate, Distribution<Double> consumerServiceTimeDistribution, Distribution<Double> corporateServiceTimeDistribution) {
         this.consumerArrivalRate = consumerArrivalRate;
         this.corporateArrivalRate = corporateArrivalRate;
         this.consumerServiceTimeDistribution = consumerServiceTimeDistribution;
@@ -49,13 +49,13 @@ public class Simulation {
                 ProductType.CONSUMER
         );
 
-/*        new Source(
+        new Source(
                 q,
                 l,
                 "corporate_call_generator",
                 iaCorporate,
                 ProductType.CORPORATE
-        );*/
+        );
 
         // A sink
         Sink si = new Sink("Sink 1");

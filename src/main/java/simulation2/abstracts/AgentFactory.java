@@ -2,7 +2,6 @@ package simulation2.abstracts;
 
 import simulation2.contracts.ProductAcceptor;
 import simulation2.models.CEventList;
-import simulation2.models.CorporateAgent;
 import simulation2.models.Machine;
 import simulation2.models.Queue;
 

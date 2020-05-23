@@ -21,8 +21,7 @@ public enum ProductType {
         return this.id == 1;
     }
 
-    public Distribution getServiceTimeDistribution() {
-
+    public Distribution<Double> getServiceTimeDistribution() {
         if (this.isConsumer())
             return SimulationConfig.CONSUMER_SERVICE_DISTRIBUTION;
 

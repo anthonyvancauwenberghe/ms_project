@@ -1,6 +1,6 @@
 package models;
 
-import factories.ArrivalRateToArrivalTimesFactory;
+import factories.InterArrivalTimesFactory;
 import statistics.PoissonDistribution;
 
 public class ArrivalRate {
@@ -28,7 +28,7 @@ public class ArrivalRate {
     }
 
     public double[] sampleInterArrivalTimes(){
-        ArrivalRateToArrivalTimesFactory factory = new ArrivalRateToArrivalTimesFactory(this);
+        InterArrivalTimesFactory factory = new InterArrivalTimesFactory(this);
         return factory.build();
     }
 

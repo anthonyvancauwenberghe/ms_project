@@ -5,23 +5,26 @@ import factories.RangeArrivalRateInSecondsFactory;
 import factories.ServiceTimeFactory;
 import factories.SinusoidArrivalRateInSecondsFactory;
 import models.ArrivalRate;
+import statistics.NormalDistribution;
 
 public class PlotData {
 
     public static void main(String[] args) {
-       // plotCorporateArrivals();
-       // plotConsumerArrivals();
+        plotCorporateArrivals();
+        //plotConsumerArrivals();
 
-        plotConsumerServiceTime();
-        plotCorporateServiceTime();
+        //plotConsumerServiceTime();
+        //plotCorporateServiceTime();
     }
+
+
 
     public static void plotCorporateArrivals() {
         ArrivalRate corporateArrivalRate = (new RangeArrivalRateInSecondsFactory(
                 ArrivalRatesConfig.CORPORATE_AVG_ARRIVAL_RATE_RANGE)
         ).build();
 
-        LineChart corporateChart = new LineChart("corporate arrival times", "time (minutes)", "Rate of arrivals", corporateArrivalRate.getRates());
+        LineChart corporateChart = new LineChart("corporate arrival times", "time (seconds)", "Rate of arrivals", corporateArrivalRate.getRates());
         corporateChart.render();
     }
 
@@ -33,7 +36,9 @@ public class PlotData {
                 ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_HOUR
         )).build();
 
-        LineChart consumerChart = new LineChart("consumer arrival times", "time (seconds)", "Rate of arrivals", consumerArrivalRate.getRates());
+        double[] rates = consumerArrivalRate.getRates();
+
+        LineChart consumerChart = new LineChart("consumer arrival times", "time (seconds)", "Rate of arrivals", rates);
         consumerChart.render();
     }
 

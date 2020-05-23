@@ -1,17 +1,10 @@
 package statistics;
 
-import org.apache.commons.math3.exception.NotStrictlyPositiveException;
-
 public class LeftTruncatedNormalDistribution extends NormalDistribution {
 
     protected int leftTruncatedValue;
 
-    public LeftTruncatedNormalDistribution(int leftTruncatedValue) {
-        super();
-        this.leftTruncatedValue = leftTruncatedValue;
-    }
-
-    public LeftTruncatedNormalDistribution(double mean, double sd, int leftTruncatedValue) throws NotStrictlyPositiveException {
+    public LeftTruncatedNormalDistribution(double mean, double sd, int leftTruncatedValue) {
         super(mean, sd);
         this.leftTruncatedValue = leftTruncatedValue;
     }
