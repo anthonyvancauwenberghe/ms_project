@@ -5,87 +5,82 @@ import simulation2.enums.ProductType;
 import java.util.ArrayList;
 
 /**
- *	Product that is send trough the system
- *	@author Joel Karel
- *	@version %I%, %G%
+ * Product that is send trough the system
+ *
+ * @author Joel Karel
+ * @version %I%, %G%
  */
-public class Product
-{
-	/** Stamps for the products */
-	private ArrayList<Double> times;
-	private ArrayList<String> events;
-	private ArrayList<String> stations;
+public class Product {
+    /**
+     * Stamps for the products
+     */
+    protected ArrayList<Double> times = new ArrayList<>();
+    protected ArrayList<String> events = new ArrayList<>();
+    protected ArrayList<String> stations = new ArrayList<>();
 
-	private final ProductType type;
-	
-	/** 
-	*	Constructor for the product
-	*	Mark the time at which it is created
-	*	create The current time
-	*/
-	public Product(ProductType type)
-	{
-		times = new ArrayList<>();
-		events = new ArrayList<>();
-		stations = new ArrayList<>();
+    protected final ProductType type;
 
-		this.type = type;
-	}
+    private double productionTime = -1;
 
-	public ProductType type() {
-		return this.type;
-	}
+    /**
+     * Constructor for the product
+     * Pass the product type as param
+     */
+    public Product(ProductType type) {
+        this.type = type;
+    }
 
-	public void stamp(double time, String event, String station)
-	{
-		times.add(time);
-		events.add(event);
-		stations.add(station);
-	}
+    public double getProductionTime() {
+        if (this.productionTime == -1)
+            this.productionTime = this.type().getServiceTimeDistribution().sample();
 
+        return this.productionTime;
+    }
 
-	
-	public ArrayList<Double> getTimes()
-	{
-		return times;
-	}
+    public ProductType type() {
+        return this.type;
+    }
 
-	public ArrayList<String> getEvents()
-	{
-		return events;
-	}
+    public void stamp(double time, String event, String station) {
+        times.add(time);
+        events.add(event);
+        stations.add(station);
+    }
 
-	public ArrayList<String> getStations()
-	{
-		return stations;
-	}
-	
-	public double[] getTimesAsArray()
-	{
-		times.trimToSize();
-		double[] tmp = new double[times.size()];
-		for (int i=0; i < times.size(); i++)
-		{
-			tmp[i] = (times.get(i)).doubleValue();
-		}
-		return tmp;
-	}
+    public ArrayList<Double> getTimes() {
+        return times;
+    }
 
-	public String[] getEventsAsArray()
-	{
-		String[] tmp = new String[events.size()];
-		tmp = events.toArray(tmp);
-		return tmp;
-	}
+    public ArrayList<String> getEvents() {
+        return events;
+    }
 
-	public String[] getStationsAsArray()
-	{
-		String[] tmp = new String[stations.size()];
-		tmp = stations.toArray(tmp);
-		return tmp;
-	}
+    public ArrayList<String> getStations() {
+        return stations;
+    }
 
-	public ProductType getType() {
-		return type;
-	}
+    public double[] getTimesAsArray() {
+        times.trimToSize();
+        double[] tmp = new double[times.size()];
+        for (int i = 0; i < times.size(); i++) {
+            tmp[i] = (times.get(i)).doubleValue();
+        }
+        return tmp;
+    }
+
+    public String[] getEventsAsArray() {
+        String[] tmp = new String[events.size()];
+        tmp = events.toArray(tmp);
+        return tmp;
+    }
+
+    public String[] getStationsAsArray() {
+        String[] tmp = new String[stations.size()];
+        tmp = stations.toArray(tmp);
+        return tmp;
+    }
+
+    public ProductType getType() {
+        return type;
+    }
 }

@@ -8,6 +8,8 @@ public class SimulationConfig {
 
     public static final int SIMULATION_COUNT = 50;
 
+    public static final int SIMULATION_RUNTIME = 24*60*60;
+
     public static final boolean DEBUG = false;
 
     public static final CallFactory CALL_FACTORY = new CallFactory(
@@ -40,8 +42,8 @@ public class SimulationConfig {
     public static final int NOON_CONSUMER_AGENTS = 5;
     public static final int NOON_CORPORATE_AGENTS = 5;
 
-    public static final int NIGHT_CONSUMER_AGENTS = 5;
-    public static final int NIGHT_CORPORATE_AGENTS = 5;
+    public static final int NIGHT_CONSUMER_AGENTS = 4;
+    public static final int NIGHT_CORPORATE_AGENTS = 4;
 
     public static final boolean[] MORNING_SHIFT = {
             false, //0-1

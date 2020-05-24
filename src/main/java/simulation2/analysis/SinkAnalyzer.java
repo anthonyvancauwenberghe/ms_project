@@ -1,6 +1,6 @@
-package simulation2.processors;
+package simulation2.analysis;
 
-import simulation2.contracts.Condition;
+import simulation2.contracts.ICondition;
 import simulation2.models.Product;
 import simulation2.models.Sink;
 import simulation2.enums.ProductType;
@@ -46,13 +46,13 @@ public class SinkAnalyzer {
         return this.products.size();
     }
 
-    public boolean satisfies(Condition condition) {
-        return condition.evaluate(this.products);
+    public boolean satisfies(ICondition ICondition) {
+        return ICondition.evaluate(this.products);
     }
 
-    public boolean satisfiesAll(Condition[] conditions) {
-        for(Condition condition : conditions){
-            if(!this.satisfies(condition))
+    public boolean satisfiesAll(ICondition[] IConditions) {
+        for(ICondition ICondition : IConditions){
+            if(!this.satisfies(ICondition))
                 return false;
         }
         return true;
