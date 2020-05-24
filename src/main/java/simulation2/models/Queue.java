@@ -16,24 +16,20 @@ public class Queue implements ProductAcceptor, CProcess {
     /**
      * List in which the products are kept
      */
-    private ArrayList<Product> products;
+    protected final ArrayList<Product> products = new ArrayList<>();
 
     /**
      * Requests from machine that will be handling the products
      */
-    private ArrayList<ProductAcceptor> processors;
+    protected ArrayList<ProductAcceptor> idleProcessors = new ArrayList<>();
 
     /**
-     * Initializes the queue and introduces a dummy machine
-     * the machine has to be specified later
+     * Requests from machine that will be handling the products
      */
-    public Queue() {
-        this.products = new ArrayList<>();
-        this.processors = new ArrayList<>();
+    protected ArrayList<ProductAcceptor> busyProcessors = new ArrayList<>();
 
-    }
 
-    public ArrayList<Product> getProducts(){
+    public ArrayList<Product> getProducts() {
         return this.products;
     }
 
@@ -54,7 +50,7 @@ public class Queue implements ProductAcceptor, CProcess {
         }
 
         // If there are no products the machine can process place it on idle ready for work.
-        processors.add(machine);
+        idleProcessors.add(machine);
         return false;
     }
 
@@ -68,14 +64,14 @@ public class Queue implements ProductAcceptor, CProcess {
      * This implementation comes with a slight performance bump (
      */
     public void reAcceptMachines() {
-        ProductAcceptor[] machines = new ProductAcceptor[this.processors.size()];
+        ProductAcceptor[] machines = new ProductAcceptor[this.idleProcessors.size()];
 
         //REMOVE ALL MACHINES FROM THE PROCESSOR LIST AND REACCEPT THEM
-        for (int i = 0; i < this.processors.size(); i++) {
-            machines[i] = processors.get(i);
+        for (int i = 0; i < this.idleProcessors.size(); i++) {
+            machines[i] = idleProcessors.get(i);
         }
 
-        this.processors = new ArrayList<>();
+        this.idleProcessors = new ArrayList<>();
 
         for (int i = 0; i < machines.length; i++) {
             this.askProduct(machines[i]);
@@ -87,15 +83,15 @@ public class Queue implements ProductAcceptor, CProcess {
      * It is investigated whether a machine wants the product, otherwise it is stored
      */
     public boolean giveProduct(Product p) {
-        int someSize = processors.size();
-        for (int i = 0; i < processors.size(); i++) {
+        for (int i = 0; i < idleProcessors.size(); i++) {
 
-            if (processors.get(i) == null)
+            if (idleProcessors.get(i) == null)
                 System.out.println("machine is null");
 
             // MAJOR CHANGE: ONLY REMOVE THE PROCESSOR WHEN THE PRODUCT IS DELIVERED
-            if (processors.get(i).giveProduct(p)) {
-                processors.remove(i);
+            if (idleProcessors.get(i).giveProduct(p)) {
+                ProductAcceptor machine = idleProcessors.remove(i);
+                busyProcessors.add(machine);
                 return true;
             }
         }
@@ -110,10 +106,12 @@ public class Queue implements ProductAcceptor, CProcess {
 
     public int remaining(ProductType type) {
         int count = 0;
+
         for (Product p : this.products) {
             if (p.type().equals(type))
                 count++;
         }
+
         return count;
     }
 }

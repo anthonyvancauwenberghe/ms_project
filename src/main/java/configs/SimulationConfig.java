@@ -6,7 +6,7 @@ import models.ArrivalRate;
 
 public class SimulationConfig {
 
-    public static final int SIMULATION_COUNT = 200;
+    public static final int SIMULATION_COUNT = 50;
 
     public static final boolean DEBUG = false;
 
@@ -35,13 +35,13 @@ public class SimulationConfig {
     public static final double costPerHourConsumerAgent = 35.0;
 
     public static final int MORNING_CONSUMER_AGENTS = 5;
-    public static final int MORNING_CORPORATE_AGENTS = 3;
+    public static final int MORNING_CORPORATE_AGENTS = 5;
 
-    public static final int NOON_CONSUMER_AGENTS = 4;
-    public static final int NOON_CORPORATE_AGENTS = 3;
+    public static final int NOON_CONSUMER_AGENTS = 5;
+    public static final int NOON_CORPORATE_AGENTS = 5;
 
-    public static final int NIGHT_CONSUMER_AGENTS = 2;
-    public static final int NIGHT_CORPORATE_AGENTS = 2;
+    public static final int NIGHT_CONSUMER_AGENTS = 5;
+    public static final int NIGHT_CORPORATE_AGENTS = 5;
 
     public static final boolean[] MORNING_SHIFT = {
             false, //0-1

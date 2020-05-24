@@ -3,50 +3,43 @@ package simulation2;
 
 import charts.LineChart;
 import configs.SimulationConfig;
-import simulation2.enums.ProductType;
-import simulation2.processors.SinkConstraintAnalyzer;
-import simulation2.models.Sink;
 
 import javax.naming.ConfigurationException;
 import java.text.DecimalFormat;
 
 public class Simulation {
 
-
-    public Simulation() {
-
-    }
-
-    public void run() throws ConfigurationException {
+    public void run(){
         long startTime = System.nanoTime();
-
-        SimulationTask task = new SimulationTask();
-        task.run();
 
         int simulationCount = SimulationConfig.SIMULATION_COUNT;
 
         double[] consumerQueueAmount = new double[simulationCount];
         double[] corporateQueueAmount = new double[simulationCount];
 
-        consumerQueueAmount[0] = 0;
-        corporateQueueAmount[0] = 0;
+        SimulationTask prevTask = null;
+        for (int i = 0; i < simulationCount; i++) {
+            SimulationTask task = new SimulationTask();
 
-        consumerQueueAmount[1] = task.getConsumerQueue().remaining();
-        corporateQueueAmount[1] = task.getCorporateQueue().remaining();
+            if (prevTask != null)
+                task.transferQueues(prevTask.consumerQueue, prevTask.corporateQueue);
 
-        for (int i = 0; i < simulationCount - 2; i++) {
-            task = new SimulationTask(task.consumerQueue, task.corporateQueue);
             task.run();
-            consumerQueueAmount[i + 2] = task.getConsumerQueue().remaining();
-            corporateQueueAmount[i + 2] = task.getCorporateQueue().remaining();
-            Sink sink = task.getSink();
-            SinkConstraintAnalyzer sinkConstraintAnalyzerConsumer = new SinkConstraintAnalyzer(sink, ProductType.CONSUMER);
-            SinkConstraintAnalyzer sinkConstraintAnalyzerCorporate = new SinkConstraintAnalyzer(sink, ProductType.CORPORATE);
-            this.printQueueInfo(task,i);
+            consumerQueueAmount[i] = task.getConsumerQueue().remaining();
+            corporateQueueAmount[i] = task.getCorporateQueue().remaining();
+
+            //  SinkConstraintAnalyzer sinkConstraintAnalyzerConsumer = new SinkConstraintAnalyzer(task.getConsumerSink(), ProductType.CONSUMER);
+            //  SinkConstraintAnalyzer sinkConstraintAnalyzerCorporate = new SinkConstraintAnalyzer(task.getCorporateSink(), ProductType.CORPORATE);
+            this.printQueueInfo(task, i);
+            prevTask = task;
         }
 
         long endTime = System.nanoTime();
 
+        this.printSimulationInfo(startTime, endTime, simulationCount, consumerQueueAmount, corporateQueueAmount);
+    }
+
+    public void printSimulationInfo(long startTime, long endTime, int simulationCount, double[] consumerQueueAmount, double[] corporateQueueAmount){
         double duration = (((double) (endTime - startTime)) / 1000000000);
 
         DecimalFormat f = new DecimalFormat("##.00");
@@ -76,7 +69,7 @@ public class Simulation {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws ConfigurationException {
+    public static void main(String[] args){
 
         Simulation sim = new Simulation(
 

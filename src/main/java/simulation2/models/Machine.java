@@ -37,6 +37,8 @@ public abstract class Machine implements CProcess, ProductAcceptor {
      */
     protected boolean idle = true;
 
+    protected double busyUntil = -1;
+
     /**
      * Machine name
      */
@@ -48,29 +50,65 @@ public abstract class Machine implements CProcess, ProductAcceptor {
         sink = s;
         eventlist = e;
         name = n;
+    }
+
+    protected void init() {
         queue.askProduct(this);
     }
 
+    /**
+     * Production is finished. Machine is ready to accept new work.
+     */
     @Override
     public void execute(int type, double tme) {
-        // show arrival
 
+        // print arrival
         if (SimulationConfig.DEBUG)
-            System.out.println("Product finished at time = " + tme);
+            System.out.println("Arrival at time = " + tme);
 
-        // Remove product from system
-        product.stamp(tme, "Production complete", name);
+        switch (type) {
+            case 50:
 
-        sink.giveProduct(product);
-        product = null;
+                break;
+            default:
+                this.finishProduction(tme);
+        }
 
         // set machine status to idle
-        this.idle = true;
+        this.setIdle();
 
-        // Ask the queue for products
+        // Ask the queue for more products
         queue.askProduct(this);
     }
 
+    public void finishProduction(double tme) {
+        // Remove product from system
+        this.product.stamp(tme, "Production complete", name);
+        this.sink.giveProduct(product);
+        this.product = null;
+    }
+
+    public void finishProductionFromPreviousQueue() {
+
+    }
+
+    public void transferProductInProduction(Product p) {
+        // accept the product
+        this.product = p;
+
+        if(this.product.getTimes().size() != 2)
+            throw new RuntimeException("can only accept products that are already in production");
+
+        this.product.getTimes().set(0, this.product.getTimes().get(0) - 86400);
+        this.product.getTimes().set(1, this.product.getTimes().get(1) - 86400);
+
+        // start production
+        startProduction(product);
+    }
+
+    /**
+     * Give a product blueprint to a machine and let it produce it.
+     */
     @Override
     public boolean giveProduct(Product p) {
 
@@ -99,12 +137,25 @@ public abstract class Machine implements CProcess, ProductAcceptor {
      */
     private void startProduction(Product product) {
 
-        // generate duration
+        // calculate the production duration
         double duration = product.type().getServiceTimeDistribution().sample();
 
-        eventlist.add(this, 0, eventlist.getTime() + duration);
-
         // set status to busy
+        this.setBusy(eventlist.getTime() + duration, 0);
+    }
+
+    public double getBusyUntil() {
+        return busyUntil;
+    }
+
+    protected void setIdle() {
+        this.busyUntil = -1;
+        this.idle = true;
+    }
+
+    protected void setBusy(double busyUntil, int type) {
+        eventlist.add(this, type, busyUntil);
+        this.busyUntil = busyUntil;
         this.idle = false;
     }
 

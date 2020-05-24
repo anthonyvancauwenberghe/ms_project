@@ -1,5 +1,6 @@
 package simulation2.processors;
 
+import simulation2.contracts.Condition;
 import simulation2.models.Product;
 import simulation2.models.Sink;
 import simulation2.enums.ProductType;
@@ -9,40 +10,56 @@ import configs.BusinessConstraintsConfig;
 import javax.naming.ConfigurationException;
 import java.util.ArrayList;
 
-public class SinkConstraintAnalyzer {
+public class SinkAnalyzer {
 
     protected ProductType productType;
-    protected Sink sink;
     protected ArrayList<Product> products;
 
-    protected int totalCallsCount;
-    protected int callsOfTypeCount;
-    protected double ratioOfCallsOfThisType;
+    protected int callCount;
+
+/*  protected int callsOfTypeCount;
+    protected double ratioOfCallsOfThisType;*/
+
     protected double totalCallTime;
     protected double totalWaitTime;
     protected double averageCallTime;
     protected double averageWaitTime;
-    protected ArrayList<Double> waitTimeList = new ArrayList();;
-    protected ArrayList<Double> callTimeList = new ArrayList();
-    protected ArrayList<Boolean> constraintsSatisfied = new ArrayList();
 
-    protected ArrayList<Double> constraintsRatioLimit = new ArrayList();
-    protected ArrayList<Double> constraintTimeLimit = new ArrayList();
+    protected ArrayList<Double> waitTimeList = new ArrayList<>();;
+    protected ArrayList<Double> callTimeList = new ArrayList<>();
+    protected ArrayList<Boolean> constraintsSatisfied = new ArrayList<>();
 
-    protected ArrayList<Double> ratioViolatingAConstraint = new ArrayList();
+    protected ArrayList<Double> constraintsRatioLimit = new ArrayList<>();
+    protected ArrayList<Double> constraintTimeLimit = new ArrayList<>();
 
-    public SinkConstraintAnalyzer(Sink sink, ProductType productType) throws ConfigurationException {
-        this.productType = productType;
-        this.sink = sink;
+    protected ArrayList<Double> ratioViolatingAConstraint = new ArrayList<>();
+
+    public SinkAnalyzer(Sink sink) throws ConfigurationException {
         this.products = sink.getProducts();
-        this.totalCallsCount = this.products.size();
+
         this.loadConfig();
-        this.parseSink();
-        this.calculateSatisfiesAllConstraints();
+      //  this.parseSink();
+      //  this.calculateSatisfiesAllConstraints();
     }
 
+    public int getProductCount(){
+        return this.products.size();
+    }
+
+    public boolean satisfies(Condition condition) {
+        return condition.evaluate(this.products);
+    }
+
+    public boolean satisfiesAll(Condition[] conditions) {
+        for(Condition condition : conditions){
+            if(!this.satisfies(condition))
+                return false;
+        }
+        return true;
+    }
+  /*
     private void parseSink() {
-        for (int i = 0; i < this.totalCallsCount; i++) {
+        for (int i = 0; i < this.callCount; i++) {
             ProductType type = this.products.get(i).getType();
             ArrayList<Double> times = this.products.get(i).getTimes();
             if(type == this.productType){
@@ -57,8 +74,8 @@ public class SinkConstraintAnalyzer {
         }
         this.averageCallTime = this.totalCallTime/this.callsOfTypeCount;
         this.averageWaitTime = this.totalWaitTime/this.callsOfTypeCount;
-        this.ratioOfCallsOfThisType = ((double) this.callsOfTypeCount) /this.totalCallsCount;
-    }
+        this.ratioOfCallsOfThisType = ((double) this.callsOfTypeCount) /this.callCount;
+    }*/
 
     private double calculateWaitTimeSingleCall(ArrayList<Double> times) {
         return times.get(1) - times.get(0);
@@ -68,14 +85,14 @@ public class SinkConstraintAnalyzer {
         return times.get(2) - times.get(1);
     }
 
-    private boolean calculateSatisfiesAllConstraints() {
+/*    private boolean calculateSatisfiesAllConstraints() {
         for (int i = 0; i < this.constraintsRatioLimit.size(); i++) {
             constraintsSatisfied.add(this.isSatisfyingAConstraint(this.constraintsRatioLimit.get(i), this.constraintTimeLimit.get(i))
             );
         }
         return this.isSatisfiesAllConstraints();
-    }
-
+    }*/
+/*
     private boolean isSatisfyingAConstraint(double limitRatio, double limitTime) {
         int countViolatingConstraint = 0;
         for (int i = 0; i < this.callsOfTypeCount; i++) {
@@ -89,7 +106,7 @@ public class SinkConstraintAnalyzer {
             return false;
         }
         return true;
-    }
+    }*/
 
     private void loadConfig() throws ConfigurationException {
         if(this.productType == ProductType.CONSUMER){
@@ -113,7 +130,7 @@ public class SinkConstraintAnalyzer {
             throw new ConfigurationException("Number of rules in percentage within and number served does not match");
         }
     }
-
+/*
     public boolean isSatisfiesAllConstraints(){
         return !this.constraintsSatisfied.contains(false);
     }
@@ -132,7 +149,7 @@ public class SinkConstraintAnalyzer {
 
     public double getTotalWaitTime() {
         return totalWaitTime;
-    }
+    }*/
 
     public double getAverageCallTime() {
         return averageCallTime;

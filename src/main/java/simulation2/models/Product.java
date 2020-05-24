@@ -42,6 +42,8 @@ public class Product
 		events.add(event);
 		stations.add(station);
 	}
+
+
 	
 	public ArrayList<Double> getTimes()
 	{

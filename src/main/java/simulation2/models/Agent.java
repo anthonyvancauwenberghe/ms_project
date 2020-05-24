@@ -13,12 +13,13 @@ public class Agent extends Machine {
         super(q, s, e, shift.toString() + "_" + type.toString() + "_" + id);
         this.type = type;
         this.shift = shift;
+        this.init();
     }
 
     protected boolean isWorkingShift() {
         int hour = (int) (this.eventlist.getTime() - (this.eventlist.getTime() % 3600)) / 3600;
 
-        if (hour > 23)
+        if (hour > 23 || hour<0)
             throw new RuntimeException("simulation time is larger than 24h. not allowed");
 
         return this.shift.getRoster()[hour];
