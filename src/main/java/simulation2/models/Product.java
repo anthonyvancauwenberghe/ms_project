@@ -82,4 +82,8 @@ public class Product
 		tmp = stations.toArray(tmp);
 		return tmp;
 	}
+
+	public ProductType getType() {
+		return type;
+	}
 }

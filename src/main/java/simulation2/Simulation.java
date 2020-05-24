@@ -3,7 +3,11 @@ package simulation2;
 
 import charts.LineChart;
 import configs.SimulationConfig;
+import simulation2.enums.ProductType;
+import simulation2.processors.SinkConstraintAnalyzer;
+import simulation2.models.Sink;
 
+import javax.naming.ConfigurationException;
 import java.text.DecimalFormat;
 
 public class Simulation {
@@ -13,7 +17,7 @@ public class Simulation {
 
     }
 
-    public void run() {
+    public void run() throws ConfigurationException {
         long startTime = System.nanoTime();
 
         SimulationTask task = new SimulationTask();
@@ -35,7 +39,10 @@ public class Simulation {
             task.run();
             consumerQueueAmount[i + 2] = task.getConsumerQueue().remaining();
             corporateQueueAmount[i + 2] = task.getCorporateQueue().remaining();
-            //this.printQueueInfo(task,i);
+            Sink sink = task.getSink();
+            SinkConstraintAnalyzer sinkConstraintAnalyzerConsumer = new SinkConstraintAnalyzer(sink, ProductType.CONSUMER);
+            SinkConstraintAnalyzer sinkConstraintAnalyzerCorporate = new SinkConstraintAnalyzer(sink, ProductType.CORPORATE);
+            this.printQueueInfo(task,i);
         }
 
         long endTime = System.nanoTime();
@@ -69,7 +76,7 @@ public class Simulation {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ConfigurationException {
 
         Simulation sim = new Simulation(
 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 public class Sink implements ProductAcceptor
 {
+
 	/** All products are kept */
 	private ArrayList<Product> products;
 
@@ -93,5 +94,9 @@ public class Sink implements ProductAcceptor
 		String[] tmp = new String[stations.size()];
 		tmp = stations.toArray(tmp);
 		return tmp;
+	}
+
+	public ArrayList<Product> getProducts() {
+		return products;
 	}
 }
