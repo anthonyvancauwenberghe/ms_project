@@ -1,14 +1,17 @@
 import configs.SimulationConfig;
 import org.junit.jupiter.api.Test;
-import simulation2.Simulator;
-import simulation2.abstracts.AbstractEvent;
-import simulation2.abstracts.AbstractEventProcessor;
-import simulation2.enums.AgentShift;
-import simulation2.enums.AgentType;
-import simulation2.enums.ProductType;
-import simulation2.events.ProductCreatedEvent;
-import simulation2.factories.AgentFactory;
-import simulation2.factories.ProductEventFactory;
+import abstracts.AbstractEvent;
+import abstracts.AbstractEventFactory;
+import abstracts.AbstractEventProcessor;
+import contracts.IQueue;
+import contracts.ISimulationConfig;
+import enums.AgentShift;
+import enums.AgentType;
+import enums.ProductType;
+import events.ProductCreatedEvent;
+import factories.AgentFactory;
+import factories.ProductEventFactory;
+import models.Sink;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,12 +20,27 @@ public class TestSimulator {
     @Test
     void testEventGeneration() {
 
-        double[] consumerTimes = {2.0, 5.0};
-        double[] corporateTimes = {3.0, 7.0, SimulationConfig.SIMULATION_RUNTIME};
+        final double[] consumerTimes = {2.0, 5.0};
+        final double[] corporateTimes = {3.0, 7.0, SimulationConfig.SIMULATION_RUNTIME};
 
         final double[] times = new double[5];
 
-        Simulator sim = new Simulator(new AbstractEventProcessor() {
+        ISimulationConfig config = new ISimulationConfig() {
+            @Override
+            public AbstractEventFactory[] getSources() {
+                return new AbstractEventFactory[]{
+                        new ProductEventFactory("CONSUMER_CALL_SOURCE", consumerTimes, ProductType.CONSUMER),
+                        new ProductEventFactory("CORPORATE_CALL_SOURCE", corporateTimes, ProductType.CORPORATE)
+                };
+            }
+
+            @Override
+            public IQueue[] getQueues() {
+                return new IQueue[0];
+            }
+        };
+
+        Simulator sim = new Simulator(config, new AbstractEventProcessor() {
             protected int counter = 0;
 
             @Override
@@ -35,9 +53,16 @@ public class TestSimulator {
                 }
             }
 
+            @Override
+            public IQueue[] getQueues() {
+                return new IQueue[0];
+            }
+
+            @Override
+            public Sink[] getSinks() {
+                return new Sink[0];
+            }
         });
-        sim.source(new ProductEventFactory("CONSUMER_CALL_SOURCE", consumerTimes, ProductType.CONSUMER));
-        sim.source(new ProductEventFactory("CORPORATE_CALL_SOURCE", corporateTimes, ProductType.CORPORATE));
 
         sim.run();
 
