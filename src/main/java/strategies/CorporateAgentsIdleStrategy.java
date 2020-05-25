@@ -11,8 +11,8 @@ public class CorporateAgentsIdleStrategy extends AbstractStrategy {
     protected int minConsumerQueueCount;
 
     public CorporateAgentsIdleStrategy() {
-        this.minAvailableCorporateAgents = 5;
-        this.minConsumerQueueCount = 7;
+        this.minAvailableCorporateAgents = 6;
+        this.minConsumerQueueCount = 5;
     }
 
     public CorporateAgentsIdleStrategy(int minAvailableCorporateAgents, int minConsumerQueueCount) {
@@ -35,7 +35,7 @@ public class CorporateAgentsIdleStrategy extends AbstractStrategy {
         }
 
         if (tme > 22 * 3600 && tme < 24 * 3600) {
-            if ((this.productInConsumerQueue() > 2) && (this.availableCorporateAgents() >= 2))
+            if ((this.productInConsumerQueue() > 2) && (this.availableCorporateAgents() >= 1))
                 return this.corporateQueue;
         }
 

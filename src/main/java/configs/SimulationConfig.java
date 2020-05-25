@@ -7,13 +7,13 @@ import models.ArrivalRate;
 import strategies.CorporateAgentsIdleStrategy;
 public class SimulationConfig {
 
-    public static final int SIMULATION_COUNT = 500;
+    public static final int SIMULATION_COUNT = 1000;
 
     public static final int SIMULATION_RUNTIME = 24*60*60;
 
     public static final boolean DEBUG = false;
 
-    public static final IStrategy strategy = new CorporateAgentsIdleStrategy();
+    public static final IStrategy strategy = new CorporateAgentsIdleStrategy(6,5);
 
     public static final ArrivalRate CONSUMER_ARRIVAL_RATE = (new SinusoidArrivalRateInSecondsFactory(
             ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE,

@@ -71,6 +71,9 @@ public class Simulation {
         consumer.plotAvgMinutelyQueueTimes();
         corporate.plotAvgMinutelyQueueTimes();
 
+        consumer.plotAvgMinutelyArrivals();
+        corporate.plotAvgMinutelyArrivals();
+
 /*
         consumer.plotAvgMinutelyArrivals();
         corporate.plotAvgMinutelyArrivals();

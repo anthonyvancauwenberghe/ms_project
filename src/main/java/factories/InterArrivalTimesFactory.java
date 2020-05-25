@@ -19,9 +19,7 @@ public class InterArrivalTimesFactory {
 
         double counter = 0;
 
-        DecimalFormat df = new DecimalFormat("#.###");
-        df.setRoundingMode(RoundingMode.CEILING);
-
+        //Loop through the rates
         for (double rate : this.rate.getRates()) {
             PoissonDistribution distribution = new PoissonDistribution(rate);
             int arrivals = distribution.sample();
@@ -39,15 +37,12 @@ public class InterArrivalTimesFactory {
         double[] array = new double[times.size()];
 
         for (int i = 0; i < times.size(); i++) {
-            if(i==0)
-                array[i]= times.get(i);
+            if (i == 0)
+                array[i] = times.get(i);
             else
-            array[i] = times.get(i)-times.get(i-1);
+                array[i] = times.get(i) - times.get(i - 1);
         }
 
         return array;
     }
-
-
-
 }

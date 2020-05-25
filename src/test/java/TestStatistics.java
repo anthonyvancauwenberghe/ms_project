@@ -3,6 +3,7 @@ import configs.SimulationConfig;
 import contracts.Distribution;
 import factories.SinusoidArrivalRateInSecondsFactory;
 import models.ArrivalRate;
+import org.apache.commons.math3.stat.inference.WilcoxonSignedRankTest;
 import org.junit.jupiter.api.Test;
 import statistics.NormalDistribution;
 import statistics.PoissonDistribution;
@@ -121,6 +122,11 @@ public class TestStatistics {
 
         assertEquals(true, avg > (averageAmount - 20));
         assertEquals(true, avg < (averageAmount + 20));
+    }
+
+    void testWilcoxonSignedRankTest(){
+
+
     }
 
 }
