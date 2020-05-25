@@ -1,4 +1,5 @@
 import configs.SimulationConfig;
+import contracts.IStrategy;
 import org.junit.jupiter.api.Test;
 import abstracts.AbstractEvent;
 import abstracts.AbstractEventFactory;
@@ -6,12 +7,13 @@ import abstracts.AbstractEventProcessor;
 import contracts.IQueue;
 import contracts.ISimulationConfig;
 import enums.AgentShift;
-import enums.AgentType;
+import enums.MachineType;
 import enums.ProductType;
 import events.ProductCreatedEvent;
 import factories.AgentFactory;
 import factories.ProductEventFactory;
 import models.Sink;
+import strategies.NoStrategy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,6 +34,21 @@ public class TestSimulator {
                         new ProductEventFactory("CONSUMER_CALL_SOURCE", consumerTimes, ProductType.CONSUMER),
                         new ProductEventFactory("CORPORATE_CALL_SOURCE", corporateTimes, ProductType.CORPORATE)
                 };
+            }
+
+            @Override
+            public void setQueues(IQueue[] queues) {
+
+            }
+
+            @Override
+            public int getIterations() {
+                return 1;
+            }
+
+            @Override
+            public IStrategy getStrategy() {
+                return new NoStrategy();
             }
 
             @Override
@@ -78,7 +95,7 @@ public class TestSimulator {
 
     @Test
     void testAgentFactory(){
-        AgentFactory factory = new AgentFactory(AgentType.CONSUMER, AgentShift.NIGHT, 1);
+        AgentFactory factory = new AgentFactory(MachineType.CONSUMER, AgentShift.NIGHT, 1);
         AbstractEvent[] events = factory.build();
 
         assertEquals(0,events[0].getExecutionTime());

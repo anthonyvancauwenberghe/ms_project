@@ -1,16 +1,13 @@
 package models;
 
 import enums.AgentShift;
-import enums.AgentType;
+import enums.MachineType;
 
 public class CallAgent extends Machine {
-
-    protected AgentType type;
     protected AgentShift shift;
 
-    public CallAgent(AgentType type, AgentShift shift, int id) {
-        super(shift.toString() + "_" + type.toString() + "_" + id);
-        this.type = type;
+    public CallAgent(MachineType type, AgentShift shift, int id) {
+        super(shift.toString() + "_" + type.toString() + "_" + id, type);
         this.shift = shift;
     }
 
@@ -22,11 +19,4 @@ public class CallAgent extends Machine {
         return false;
     }
 
-    public AgentType getType() {
-        return type;
-    }
-
-    public AgentShift getShift() {
-        return shift;
-    }
 }

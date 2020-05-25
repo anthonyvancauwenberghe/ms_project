@@ -73,8 +73,11 @@ public abstract class AbstractEventProcessor implements IEventProcessor {
             this.process(event);
         }
 
-        if (!this.getEvents().empty())
-            System.out.println("Stopped simulation with " + this.getEvents().count() + " event(s) remaining. ");
+        if (SimulationConfig.DEBUG) {
+            if (!this.getEvents().empty())
+                System.out.println("Stopped simulation with " + this.getEvents().count() + " event(s) remaining. ");
+        }
+
     }
 
     public double getCurrentTime() {

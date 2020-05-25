@@ -1,3 +1,4 @@
+import analysis.SinkAnalysis;
 import configs.SimulationConfig;
 import abstracts.AbstractEvent;
 import abstracts.AbstractEventFactory;
@@ -9,7 +10,6 @@ import models.Machine;
 import models.Product;
 import processor.EventProcessor;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class Simulator {
 
     public Simulator(ISimulationConfig config) {
         this.config = config;
-        this.processor = new EventProcessor();
+        this.processor = config.getStrategy() == null ? new EventProcessor() : new EventProcessor(config.getStrategy());
     }
 
     public Simulator(ISimulationConfig config, IEventProcessor processor) {
@@ -43,16 +43,24 @@ public class Simulator {
         this.bootSources();
         this.processor.start();
 
-        if (SimulationConfig.DEBUG && this.processor.getQueues().length>1 ) {
+/*        if (SimulationConfig.DEBUG && this.processor.getQueues().length > 1) {
             double duration = (((double) (System.nanoTime() - startTime)) / 1000000000);
             DecimalFormat f = new DecimalFormat("##.0000");
-            this.printQueueInfo(f.format(duration));
-        }
+            this.queueInfo(f.format(duration));
+        }*/
 
         this.executed = true;
     }
 
-    public void printQueueInfo(String duration) {
+    public SinkAnalysis consumerAnalysis() {
+        return new SinkAnalysis(this.processor.getSinks()[0], this.processor.getQueues()[0], "Consumer");
+    }
+
+    public SinkAnalysis corporateAnalysis() {
+        return new SinkAnalysis(this.processor.getSinks()[1], this.processor.getQueues()[1], "Corporate");
+    }
+
+    public void queueInfo(String duration) {
         System.out.println("------------------------------");
         System.out.println("Ran simulation in " + duration + " seconds");
         System.out.println(this.processor.getQueues()[0].count() + " consumer calls left in queue");

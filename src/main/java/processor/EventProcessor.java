@@ -4,14 +4,18 @@ import abstracts.AbstractEvent;
 import abstracts.AbstractEventProcessor;
 import abstracts.AbstractProductEvent;
 import contracts.IQueue;
+import contracts.IStrategy;
 import events.*;
 import listeners.*;
 import models.CallAgent;
 import models.Product;
 import models.Queue;
 import models.Sink;
+import strategies.NoStrategy;
 
 public class EventProcessor extends AbstractEventProcessor {
+
+    protected IStrategy strategy;
 
     protected IQueue consumerQueue = new Queue();
 
@@ -20,6 +24,16 @@ public class EventProcessor extends AbstractEventProcessor {
     protected Sink consumerSink = new Sink("CONSUMER_SINK");
 
     protected Sink corporateSink = new Sink("CORPORATE_SINK");
+
+    public EventProcessor() {
+        this.strategy = new NoStrategy();
+        this.strategy.setQueues(consumerQueue, corporateQueue);
+    }
+
+    public EventProcessor(IStrategy strategy) {
+        this.strategy = strategy;
+        this.strategy.setQueues(consumerQueue, corporateQueue);
+    }
 
     /**
      * All the events are caught and processed here.
@@ -44,7 +58,8 @@ public class EventProcessor extends AbstractEventProcessor {
         Sink sink = this.selectSink(event.getProduct());
 
         if (event instanceof ProductCreatedEvent)
-            new ProductCreatedListener(queue, this.getEvents()).handle((ProductCreatedEvent) event);
+            //SELECT QUEUE FOR THIS LISTENER BASED ON A STRATEGY
+            new ProductCreatedListener(this.strategy.execute(event.getExecutionTime(),event.getProduct()), this.getEvents()).handle((ProductCreatedEvent) event);
         else if (event instanceof ProductionStartedEvent)
             new StartProductionListener(queue, this.getEvents()).handle((ProductionStartedEvent) event);
         else if (event instanceof ProductionFinishedEvent)
@@ -59,7 +74,7 @@ public class EventProcessor extends AbstractEventProcessor {
     }
 
     /**
-     * Select the right queue acoording to the product type
+     * Select the right queue according to the agent type
      */
     protected IQueue selectQueue(CallAgent machine) {
         return machine.getType().isConsumer() ? this.consumerQueue : this.corporateQueue;

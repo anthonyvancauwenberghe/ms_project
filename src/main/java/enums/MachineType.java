@@ -2,13 +2,13 @@ package enums;
 
 import models.Product;
 
-public enum AgentType {
+public enum MachineType {
     CORPORATE(0),
     CONSUMER(1);
 
     protected int id;
 
-    AgentType(int id) {
+    MachineType(int id) {
         this.id = id;
     }
 

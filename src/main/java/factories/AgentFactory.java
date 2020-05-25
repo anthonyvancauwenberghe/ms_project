@@ -3,7 +3,7 @@ package factories;
 import abstracts.AbstractEvent;
 import abstracts.AbstractEventFactory;
 import enums.AgentShift;
-import enums.AgentType;
+import enums.MachineType;
 import events.MachineStartedEvent;
 import events.MachineStoppedEvent;
 import models.CallAgent;
@@ -15,7 +15,7 @@ public class AgentFactory extends AbstractEventFactory {
     /**
      * What type of agent is it CORPORATE|CONSUMER
      */
-    protected final AgentType type;
+    protected final MachineType type;
 
     /**
      * What type of shift is it MORNING|NOON|NIGHT
@@ -25,7 +25,7 @@ public class AgentFactory extends AbstractEventFactory {
     protected int agents;
 
 
-    public AgentFactory(AgentType type, AgentShift shift, int amount) {
+    public AgentFactory(MachineType type, AgentShift shift, int amount) {
         super("AgentFactory");
         this.type = type;
         this.shift = shift;

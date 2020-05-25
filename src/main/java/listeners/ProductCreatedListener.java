@@ -21,7 +21,7 @@ public class ProductCreatedListener implements IListener<ProductCreatedEvent> {
     @Override
     public void handle(ProductCreatedEvent event) {
         event.getProduct().stamp(event.getExecutionTime(), "CREATED", event.getStation());
-
+        event.getProduct().setArrivalTime(event.getExecutionTime());
         Machine machine = this.queue.add(event.getProduct());
 
         if (machine != null)

@@ -1,5 +1,7 @@
 package models;
 
+import enums.MachineType;
+
 public class Machine {
     /**
      * Product that is being handled
@@ -23,9 +25,12 @@ public class Machine {
      */
     protected final String name;
 
+    protected MachineType type;
 
-    public Machine(String n) {
-        name = n;
+
+    public Machine(String n, MachineType type) {
+        this.name = n;
+        this.type = type;
     }
 
 
@@ -82,5 +87,9 @@ public class Machine {
 
     public Product getProduct() {
         return product;
+    }
+
+    public MachineType getType() {
+        return type;
     }
 }

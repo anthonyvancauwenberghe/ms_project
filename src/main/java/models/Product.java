@@ -1,5 +1,6 @@
 package models;
 
+import enums.MachineType;
 import enums.ProductType;
 
 import java.util.ArrayList;
@@ -20,7 +21,13 @@ public class Product {
 
     protected final ProductType type;
 
-    private double productionTime = -1;
+    protected MachineType servicedBy;
+
+    protected double productionTime = -1;
+
+    protected double queueTime = -1;
+
+    protected double arrivalTime = -1;
 
     /**
      * Constructor for the product
@@ -28,6 +35,17 @@ public class Product {
      */
     public Product(ProductType type) {
         this.type = type;
+    }
+
+    public void setServicedBy(MachineType type) {
+        this.servicedBy = type;
+    }
+
+    public MachineType getServicedBy() {
+        if (this.servicedBy == null)
+            throw new RuntimeException("Product has not been serviced by any machine");
+
+        return servicedBy;
     }
 
     public void setProductionTime(double time) {
@@ -42,6 +60,38 @@ public class Product {
             this.productionTime = this.type().getServiceTimeDistribution().sample();
 
         return this.productionTime;
+    }
+
+    public void setQueueTime(double time) {
+        if (queueTime != -1)
+            throw new RuntimeException("Can only set production time when it's not initialized yet");
+
+        this.queueTime = time;
+    }
+
+    public double getQueueTime() {
+        if (!this.hasQueueTime())
+            throw new RuntimeException("Product service time not initialized");
+
+        return this.queueTime;
+    }
+
+    public boolean hasQueueTime() {
+        return this.queueTime != -1;
+    }
+
+    public void setArrivalTime(double time) {
+        if (arrivalTime != -1)
+            throw new RuntimeException("Can only set production time when it's not initialized yet");
+
+        this.arrivalTime = time;
+    }
+
+    public double getArrivalTime() {
+        if (this.arrivalTime == -1)
+            throw new RuntimeException("Arrival time not initialized");
+
+        return this.arrivalTime;
     }
 
     public ProductType type() {
