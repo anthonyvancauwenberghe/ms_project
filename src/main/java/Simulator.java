@@ -21,7 +21,7 @@ public class Simulator {
 
     protected ISimulationConfig config;
 
-    protected boolean ran = false;
+    protected boolean executed = false;
 
     public Simulator(ISimulationConfig config) {
         this.config = config;
@@ -36,23 +36,20 @@ public class Simulator {
     public void run() {
         long startTime = System.nanoTime();
 
-        if (this.ran)
+        if (this.executed)
             throw new RuntimeException("cannot run the same simulation more than once. Create a new instance to run multiple iterations.");
 
         this.initConfig();
         this.bootSources();
         this.processor.start();
 
-        long endTime = System.nanoTime();
-        double duration = (((double) (endTime - startTime)) / 1000000000);
-
-        if (SimulationConfig.DEBUG) {
+        if (SimulationConfig.DEBUG && this.processor.getQueues().length>1 ) {
+            double duration = (((double) (System.nanoTime() - startTime)) / 1000000000);
             DecimalFormat f = new DecimalFormat("##.0000");
             this.printQueueInfo(f.format(duration));
         }
 
-
-        this.ran = true;
+        this.executed = true;
     }
 
     public void printQueueInfo(String duration) {
@@ -64,7 +61,10 @@ public class Simulator {
         System.out.println("------------------------------");
     }
 
-    public void initConfig() {
+    /**
+     * initializes the config file
+     */
+    protected void initConfig() {
         for (AbstractEventFactory source : this.config.getSources()) {
             this.source(source);
         }
@@ -106,6 +106,7 @@ public class Simulator {
     }
 
     protected void bootSources() {
+        //Start generating all the events from the sources
         for (AbstractEventFactory source : this.sources) {
             for (AbstractEvent event : source.build()) {
                 this.processor.addEvent(event);

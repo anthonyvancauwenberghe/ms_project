@@ -108,7 +108,7 @@ public class TestStatistics {
 
     @Test
     void testConsumerArrivalRateGeneration() {
-
+        //TODO IMPLEMENT THINNING ALGO TO FIX THIS
         int averageAmount = ((int) ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE) * 60 *24;
 
         double total = 0;
