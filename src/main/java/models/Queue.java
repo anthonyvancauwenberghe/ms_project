@@ -12,7 +12,7 @@ public class Queue implements IQueue {
     protected final ArrayList<Product> queue = new ArrayList<>();
 
     /**
-     * List of agents (machines)
+     * List of machines
      */
     protected final ArrayList<Machine> machines = new ArrayList<>();
 

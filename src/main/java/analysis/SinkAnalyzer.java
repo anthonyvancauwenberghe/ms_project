@@ -10,6 +10,7 @@ import configs.BusinessConstraintsConfig;
 import javax.naming.ConfigurationException;
 import java.util.ArrayList;
 
+//TODO REWRITE
 public class SinkAnalyzer {
 
     protected ProductType productType;

@@ -30,7 +30,7 @@ public enum ProductType {
 
     @Override
     public String toString() {
-        if(this.isConsumer())
+        if (this.isConsumer())
             return "CONSUMER";
         else
             return "CORPORATE";

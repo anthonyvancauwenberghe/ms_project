@@ -5,6 +5,7 @@ import contracts.IEventProcessor;
 import contracts.IQueue;
 import contracts.ISimulationConfig;
 import events.ProductCreatedEvent;
+import models.Machine;
 import models.Product;
 import processor.EventProcessor;
 
@@ -45,7 +46,7 @@ public class Simulator {
         long endTime = System.nanoTime();
         double duration = (((double) (endTime - startTime)) / 1000000000);
 
-        if(SimulationConfig.DEBUG){
+        if (SimulationConfig.DEBUG) {
             DecimalFormat f = new DecimalFormat("##.0000");
             this.printQueueInfo(f.format(duration));
         }
@@ -56,10 +57,10 @@ public class Simulator {
 
     public void printQueueInfo(String duration) {
         System.out.println("------------------------------");
-        System.out.println("Ran simulation in " + duration  + " seconds");
+        System.out.println("Ran simulation in " + duration + " seconds");
         System.out.println(this.processor.getQueues()[0].count() + " consumer calls left in queue");
         System.out.println(this.processor.getQueues()[1].count() + " corporate calls left in queue");
-        System.out.println(this.processor.getQueues()[0].count()  + this.processor.getQueues()[1].count()  + " total calls left in queue");
+        System.out.println(this.processor.getQueues()[0].count() + this.processor.getQueues()[1].count() + " total calls left in queue");
         System.out.println("------------------------------");
     }
 
@@ -85,9 +86,22 @@ public class Simulator {
      * transfers over products from an existing queue
      */
     public void queue(IQueue queue) {
+        // Transfer over the products are waiting in the queue
         for (Product product : queue.getQueue()) {
             AbstractEvent event = new ProductCreatedEvent(product.getTimes().get(0) - SimulationConfig.SIMULATION_RUNTIME, "OLD_QUEUE", new Product(product.type()));
             this.processor.addEvent(event);
+        }
+
+        // Here we keep the workers that were busy in the previous queue busy until they have finished the production of their product
+        // In other words we transfer over the products that are in production.
+        for (Machine machine : queue.getMachines()) {
+            if (machine.isBusy()) {
+                Product product = machine.getProduct();
+                Product newProduct = new Product(product.type());
+                newProduct.setProductionTime(product.getTimes().get(1) + product.getProductionTime() - SimulationConfig.SIMULATION_RUNTIME);
+                AbstractEvent event = new ProductCreatedEvent(product.getTimes().get(0) - SimulationConfig.SIMULATION_RUNTIME, "OLD_QUEUE", newProduct);
+                this.processor.addEvent(event);
+            }
         }
     }
 

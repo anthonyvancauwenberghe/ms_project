@@ -56,11 +56,11 @@ public class Machine {
         this.idle = false;
     }
 
-    protected boolean isIdle() {
+    public boolean isIdle() {
         return this.idle;
     }
 
-    protected boolean isBusy() {
+    public boolean isBusy() {
         return !this.idle;
     }
 
@@ -78,5 +78,9 @@ public class Machine {
 
     public void enable() {
         this.operational = true;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 }

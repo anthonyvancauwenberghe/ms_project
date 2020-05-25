@@ -30,6 +30,13 @@ public class Product {
         this.type = type;
     }
 
+    public void setProductionTime(double time) {
+        if (productionTime != -1)
+            throw new RuntimeException("Can only set production time when it's not initialized yet");
+
+        this.productionTime = time;
+    }
+
     public double getProductionTime() {
         if (this.productionTime == -1)
             this.productionTime = this.type().getServiceTimeDistribution().sample();
