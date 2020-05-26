@@ -1,6 +1,5 @@
 import analysis.SinkAnalysisAggregator;
 import calculators.AgentDailyCostCalculator;
-import charts.LineChart;
 import configs.DefaultSimConfig;
 import configs.SimulationConfig;
 import contracts.ISimulationConfig;
@@ -67,12 +66,22 @@ public class Simulation {
         //log startime of analysis
         long startTime = System.nanoTime();
 
-
-        consumer.plotAvgMinutelyQueueTimes();
-        corporate.plotAvgMinutelyQueueTimes();
+        consumer.plotAvgMinutelyQueueTimesWithConfidence(0.99);
+        corporate.plotAvgMinutelyQueueTimesWithConfidence(0.99);
 
         consumer.plotAvgMinutelyArrivals();
         corporate.plotAvgMinutelyArrivals();
+/*
+        consumer.plotAvgMinutelyQueueTimes();
+        corporate.plotAvgMinutelyQueueTimes();*/
+
+
+
+/*        consumer.plotAvgMinutelyQueueTimes();
+        corporate.plotAvgMinutelyQueueTimes();*/
+
+/*        consumer.plotAvgMinutelyArrivals();
+        corporate.plotAvgMinutelyArrivals();*/
 
 /*
         consumer.plotAvgMinutelyArrivals();
@@ -95,24 +104,49 @@ public class Simulation {
                 new DecimalFormat("##.00").format((((double) (System.nanoTime() - startTime)) / 1000000000)) +
                 " seconds");
 
-        double fiveMinuteProbability = consumer.avgProbabilityQueueTimeLessThan(5.0 * 60);
-        double tenMinuteProbability = consumer.avgProbabilityQueueTimeLessThan(10.0 * 60);
+        double confidence = 0.99;
+        String confidenceString = confidence*100 + "% ";
+        double[] fiveMinuteProbability = consumer.avgProbabilityQueueTimeLessThanWithConfidence(5.0 * 60,0,SimulationConfig.SIMULATION_RUNTIME,confidence);
+        double[] tenMinuteProbability = consumer.avgProbabilityQueueTimeLessThanWithConfidence(10.0 * 60,0,SimulationConfig.SIMULATION_RUNTIME,confidence);
+
+        System.out.println("");
         System.out.println("");
         System.out.println("--------------------------");
         System.out.println("CONSUMER QUEUE TIME PROBABILITIES");
-        System.out.println("5 min: " + new DecimalFormat("##.00").format(fiveMinuteProbability * 100) + " % - " + (fiveMinuteProbability >= 0.9 ? "SATISFIED" : "FAILED"));
-        System.out.println("10 min: " + new DecimalFormat("##.00").format(tenMinuteProbability * 100) + " % - " + (tenMinuteProbability >= 0.95 ? "SATISFIED" : "FAILED"));
+        System.out.println("--------------------------");
+        System.out.println("sample mean 5 min: " + new DecimalFormat("##.00").format(fiveMinuteProbability[2] * 100) + " % - " + (fiveMinuteProbability[2] >= 0.9 ? "SATISFIED" : "FAILED"));
+        System.out.println(confidenceString + "lower 5 min: " + new DecimalFormat("##.00").format(fiveMinuteProbability[0] * 100) + " % - " + (fiveMinuteProbability[0] >= 0.9 ? "SATISFIED" : "FAILED"));
+        System.out.println(confidenceString + "upper 5 min: " + new DecimalFormat("##.00").format(fiveMinuteProbability[1] * 100) + " % - " + (fiveMinuteProbability[1] >= 0.9 ? "SATISFIED" : "FAILED"));
+        System.out.println("--------------------------");
+
+        System.out.println("");
+        System.out.println("--------------------------");
+        System.out.println("sample mean 10 min: " + new DecimalFormat("##.00").format(tenMinuteProbability[2] * 100) + " % - " + (tenMinuteProbability[2] >= 0.95 ? "SATISFIED" : "FAILED"));
+        System.out.println(confidenceString + "lower 10 min: " + new DecimalFormat("##.00").format(tenMinuteProbability[0] * 100) + " % - " + (tenMinuteProbability[0] >= 0.95 ? "SATISFIED" : "FAILED"));
+        System.out.println(confidenceString + "upper 10 min: " + new DecimalFormat("##.00").format(tenMinuteProbability[1] * 100) + " % - " + (tenMinuteProbability[1] >= 0.95 ? "SATISFIED" : "FAILED"));
         System.out.println("--------------------------");
         System.out.println("");
+        System.out.println("");
 
+        double[] threeMinuteProbability = corporate.avgProbabilityQueueTimeLessThanWithConfidence(3.0 * 60,0,SimulationConfig.SIMULATION_RUNTIME,confidence);
+        double[] sevenMinuteProbability = corporate.avgProbabilityQueueTimeLessThanWithConfidence(7.0 * 60,0,SimulationConfig.SIMULATION_RUNTIME,confidence);
 
-        double threeMinuteProbability = corporate.avgProbabilityQueueTimeLessThan(3.0 * 60);
-        double sevenMinuteProbability = corporate.avgProbabilityQueueTimeLessThan(7.0 * 60);
         System.out.println("--------------------------");
         System.out.println("CORPORATE QUEUE TIME PROBABILITIES");
-        System.out.println("3 min: " + new DecimalFormat("##.00").format(threeMinuteProbability * 100) + " % - " + (threeMinuteProbability >= 0.95 ? "SATISFIED" : "FAILED"));
-        System.out.println("7 min: " + new DecimalFormat("##.00").format(sevenMinuteProbability * 100) + " % - " + (sevenMinuteProbability >= 0.99 ? "SATISFIED" : "FAILED"));
         System.out.println("--------------------------");
+        System.out.println("sample mean 3 min: " + new DecimalFormat("##.00").format(threeMinuteProbability[2] * 100) + " % - " + (threeMinuteProbability[2] >= 0.95 ? "SATISFIED" : "FAILED"));
+        System.out.println(confidenceString + "lower 3 min: " + new DecimalFormat("##.00").format(threeMinuteProbability[0] * 100) + " % - " + (threeMinuteProbability[0] >= 0.95 ? "SATISFIED" : "FAILED"));
+        System.out.println(confidenceString + "upper 3 min: " + new DecimalFormat("##.00").format(threeMinuteProbability[1] * 100) + " % - " + (threeMinuteProbability[1] >= 0.95 ? "SATISFIED" : "FAILED"));
+        System.out.println("--------------------------");
+
+        System.out.println("");
+        System.out.println("--------------------------");
+        System.out.println("sample mean 7 min: " + new DecimalFormat("##.00").format(sevenMinuteProbability[2] * 100) + " % - " + (sevenMinuteProbability[2] >= 0.99 ? "SATISFIED" : "FAILED"));
+        System.out.println(confidenceString + "lower 7 min: " + new DecimalFormat("##.00").format(sevenMinuteProbability[0] * 100) + " % - " + (sevenMinuteProbability[0] >= 0.99 ? "SATISFIED" : "FAILED"));
+        System.out.println(confidenceString + "upper 7 min: " + new DecimalFormat("##.00").format(sevenMinuteProbability[1] * 100) + " % - " + (sevenMinuteProbability[1] >= 0.99 ? "SATISFIED" : "FAILED"));
+        System.out.println("--------------------------");
+        System.out.println("");
+        System.out.println("");
     }
 
     public void printSimulationInfo() {

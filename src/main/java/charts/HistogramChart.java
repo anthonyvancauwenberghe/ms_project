@@ -15,6 +15,8 @@ public class HistogramChart {
     protected DefaultTableXYDataset dataset = new DefaultTableXYDataset();
     protected JFreeChart chart;
 
+    protected int countseries=0;
+
     protected String title;
     protected String xAxxis;
     protected String yAxxis;
@@ -31,6 +33,14 @@ public class HistogramChart {
     }
 
     public void addSeries(String name, double[] series, double offset) {
+        DefaultTableXYDataset dataset;
+
+        if(this.countseries!=0)
+            dataset=new DefaultTableXYDataset();
+        else{
+            dataset = this.dataset;
+        }
+
         XYSeries serie = new XYSeries(name, true, false);
 
         for (int i = 0; i < series.length; i++) {
@@ -40,6 +50,10 @@ public class HistogramChart {
         }
 
         dataset.addSeries(serie);
+        if(countseries>0)
+            this.chart.getXYPlot().setDataset(this.countseries,dataset);
+        countseries++;
+
     }
 
     public void addSeries(String name, double[] series) {
@@ -59,7 +73,7 @@ public class HistogramChart {
 
         ChartFrame frame = new ChartFrame(this.title, chart);
         frame.pack();
-        frame.setSize(800, 400);
+        frame.setSize(1024, 768);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);

@@ -3,6 +3,7 @@ package abstracts;
 import contracts.IQueue;
 import contracts.IStrategy;
 import models.Machine;
+import models.Product;
 
 public abstract class AbstractStrategy implements IStrategy {
     protected IQueue consumerQueue;
@@ -64,5 +65,17 @@ public abstract class AbstractStrategy implements IStrategy {
                 count++;
         }
         return count;
+    }
+
+    protected double getMaxConsumerQueueTime(double currentTime) {
+        double max = -1;
+
+        for (Product product : this.consumerQueue.getQueue()) {
+            double queueTime = currentTime - product.getArrivalTime();
+
+            if (queueTime > max)
+                max = queueTime;
+        }
+        return max;
     }
 }

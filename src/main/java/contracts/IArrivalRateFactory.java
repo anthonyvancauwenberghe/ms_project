@@ -1,7 +1,13 @@
 package contracts;
 
-import models.ArrivalRate;
+
+import models.NewArrivalRate;
 
 public interface IArrivalRateFactory {
-    public ArrivalRate build();
+    public double[] sampleInterArrivalRates();
+
+    public double getRate(double time);
+
+    public NewArrivalRate build();
+
 }

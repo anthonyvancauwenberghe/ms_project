@@ -1,46 +1,21 @@
 package factories;
 
-import models.ArrivalRate;
-import statistics.PoissonDistribution;
-
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.*;
-
 public class InterArrivalTimesFactory {
-    protected final ArrivalRate rate;
+    protected double[] times;
 
-    public InterArrivalTimesFactory(ArrivalRate arrivalRate) {
-        this.rate = arrivalRate;
+    public InterArrivalTimesFactory(double [] times) {
+        this.times = times;
     }
 
     public double[] build() {
-        List<Double> times = new LinkedList<>();
 
-        double counter = 0;
+        double[] array = new double[this.times.length];
 
-        //Loop through the rates
-        for (double rate : this.rate.getRates()) {
-            PoissonDistribution distribution = new PoissonDistribution(rate);
-            int arrivals = distribution.sample();
-
-            for (int i = 0; i < arrivals; i++) {
-                Random rng = new Random();
-                times.add(counter + rng.nextDouble());
-            }
-
-            counter++;
-        }
-
-        Collections.sort(times);
-
-        double[] array = new double[times.size()];
-
-        for (int i = 0; i < times.size(); i++) {
+        for (int i = 0; i < this.times.length; i++) {
             if (i == 0)
-                array[i] = times.get(i);
+                array[i] = this.times[i];
             else
-                array[i] = times.get(i) - times.get(i - 1);
+                array[i] = this.times[i] - this.times[i-1];
         }
 
         return array;

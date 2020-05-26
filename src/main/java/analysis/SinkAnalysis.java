@@ -53,7 +53,7 @@ public class SinkAnalysis {
     public double probabilityOfQueueTimeLessThan(double duration, double startTime, double endTime) {
         double count = 0;
         double totalCount = 0;
-        for (Product product : this.getProductsWithArrivalBetween(0, SimulationConfig.SIMULATION_RUNTIME)) {
+        for (Product product : this.getProductsWithArrivalBetween(startTime, endTime)) {
             if (product.getQueueTime() <= duration) {
                 count++;
             }

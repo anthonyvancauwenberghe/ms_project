@@ -1,10 +1,10 @@
 package configs;
 
 import contracts.Distribution;
+import contracts.IArrivalRateFactory;
 import contracts.IStrategy;
 import factories.*;
-import models.ArrivalRate;
-import strategies.CorporateAgentsIdleStrategy;
+import strategies.TimedConsumerQueueTimeStrategy;
 public class SimulationConfig {
 
     public static final int SIMULATION_COUNT = 1000;
@@ -13,19 +13,19 @@ public class SimulationConfig {
 
     public static final boolean DEBUG = false;
 
-    public static final IStrategy strategy = new CorporateAgentsIdleStrategy(6,5);
+    public static final IStrategy strategy = new TimedConsumerQueueTimeStrategy();
 
-    public static final ArrivalRate CONSUMER_ARRIVAL_RATE = (new SinusoidArrivalRateInSecondsFactory(
+    public static final IArrivalRateFactory CONSUMER_ARRIVAL_RATE = (new ConsumerArrivalTimeFactory(
             ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE,
             ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD,
             ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_MINUTE_VALUE,
             ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_HOUR
-    )).build();
+    ));
 
-    public static final ArrivalRate CORPORATE_ARRIVAL_RATE = (new RangeArrivalRateInSecondsFactory(
-            ArrivalRatesConfig.CORPORATE_AVG_ARRIVAL_RATE_RANGE
-    )).build();
-
+    public static final IArrivalRateFactory CORPORATE_ARRIVAL_RATE = (new CorporateArrivalTimeFactory(
+            ArrivalRatesConfig.CORPORATE_AVG_ARRIVAL_RATE_RANGE,
+            SimulationConfig.SIMULATION_RUNTIME
+    ));
 
     public static final Distribution<Double> CONSUMER_SERVICE_DISTRIBUTION = (new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT)).getDistribution();
     public static final Distribution<Double> CORPORATE_SERVICE_DISTRIBUTION = (new ServiceTimeFactory(ServiceTimesConfig.CORPORATE_SERVICE_TIME_MEAN, ServiceTimesConfig.CORPORATE_SERVICE_TIME_STD, ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT)).getDistribution();
@@ -39,11 +39,11 @@ public class SimulationConfig {
     public static final int MORNING_CORPORATE_AGENTS = 5;
 
     //14-22
-    public static final int NOON_CONSUMER_AGENTS = 6;
+    public static final int NOON_CONSUMER_AGENTS = 5;
     public static final int NOON_CORPORATE_AGENTS = 5;
 
     //22-06
-    public static final int NIGHT_CONSUMER_AGENTS = 2;
+    public static final int NIGHT_CONSUMER_AGENTS = 1;
     public static final int NIGHT_CORPORATE_AGENTS = 2;
 
     public static final boolean[] MORNING_SHIFT = {

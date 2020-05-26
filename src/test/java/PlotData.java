@@ -2,19 +2,8 @@ import charts.HistogramChart;
 import charts.LineChart;
 import configs.ArrivalRatesConfig;
 import configs.ServiceTimesConfig;
-import factories.RangeArrivalRateInSecondsFactory;
 import factories.ServiceTimeFactory;
-import factories.SinusoidArrivalRateInSecondsFactory;
 import models.ArrivalRate;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.data.statistics.HistogramType;
-import org.jfree.data.xy.DefaultTableXYDataset;
-import org.jfree.data.xy.XYSeries;
-import statistics.NormalDistribution;
 
 public class PlotData {
 
@@ -30,7 +19,7 @@ public class PlotData {
 
 
 
-    public static void plotCorporateArrivals() {
+/*    public static void plotCorporateArrivals() {
         ArrivalRate corporateArrivalRate = (new RangeArrivalRateInSecondsFactory(
                 ArrivalRatesConfig.CORPORATE_AVG_ARRIVAL_RATE_RANGE)
         ).build();
@@ -51,7 +40,7 @@ public class PlotData {
 
         LineChart consumerChart = new LineChart("consumer arrival times", "time (seconds)", "Rate of arrivals", rates);
         consumerChart.render();
-    }
+    }*/
 
     public static void plotConsumerServiceTime() {
         ServiceTimeFactory consumerServiceTime = (new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT));

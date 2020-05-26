@@ -1,13 +1,20 @@
 package models;
 
 import factories.InterArrivalTimesFactory;
+import org.apache.commons.lang3.ArrayUtils;
 import statistics.PoissonDistribution;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 public class ArrivalRate {
     protected double[] data;
 
+    protected double max;
+
     public ArrivalRate(double[] data) {
         this.data = data;
+        this.max = Collections.max(Arrays.asList(ArrayUtils.toObject(data)));
     }
 
     /**
@@ -27,11 +34,6 @@ public class ArrivalRate {
         return distribution.sample();
     }
 
-    public double[] sampleInterArrivalTimes(){
-        InterArrivalTimesFactory factory = new InterArrivalTimesFactory(this);
-        return factory.build();
-    }
-
     public Integer[] getArrivalRateSample(int hour, int minute, int size) {
         double rate = this.getArrivalRate(hour, minute);
         PoissonDistribution distribution = new PoissonDistribution(rate);
@@ -40,5 +42,9 @@ public class ArrivalRate {
 
     public double[] getRates() {
         return this.data;
+    }
+
+    public double getMax() {
+        return this.max;
     }
 }

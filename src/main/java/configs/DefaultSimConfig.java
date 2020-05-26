@@ -8,6 +8,7 @@ import enums.AgentShift;
 import enums.MachineType;
 import enums.ProductType;
 import factories.AgentFactory;
+import factories.InterArrivalTimesFactory;
 import factories.ProductEventFactory;
 
 public class DefaultSimConfig implements ISimulationConfig {
@@ -31,12 +32,12 @@ public class DefaultSimConfig implements ISimulationConfig {
     public AbstractEventFactory[] getSources() {
         AbstractEventFactory[] sources = new AbstractEventFactory[8];
 
-        double[] consumerTimes = SimulationConfig.CONSUMER_ARRIVAL_RATE.sampleInterArrivalTimes();
-        double[] corporateTimes = SimulationConfig.CORPORATE_ARRIVAL_RATE.sampleInterArrivalTimes();
+        double[] consumerInterArrivalTimes = new InterArrivalTimesFactory(SimulationConfig.CONSUMER_ARRIVAL_RATE.sampleInterArrivalRates()).build();
+        double[] corporateInterArrivalTimes = new InterArrivalTimesFactory(SimulationConfig.CORPORATE_ARRIVAL_RATE.sampleInterArrivalRates()).build();
 
         //INIT THE CALL SOURCES
-        sources[0] = new ProductEventFactory("CONSUMER_CALL_SOURCE", consumerTimes, ProductType.CONSUMER);
-        sources[1] = new ProductEventFactory("CORPORATE_CALL_SOURCE", corporateTimes, ProductType.CORPORATE);
+        sources[0] = new ProductEventFactory("CONSUMER_CALL_SOURCE", consumerInterArrivalTimes, ProductType.CONSUMER);
+        sources[1] = new ProductEventFactory("CORPORATE_CALL_SOURCE", corporateInterArrivalTimes, ProductType.CORPORATE);
 
         sources[2] = new AgentFactory(MachineType.CONSUMER, AgentShift.MORNING, SimulationConfig.MORNING_CONSUMER_AGENTS);
         sources[3] = new AgentFactory(MachineType.CORPORATE, AgentShift.MORNING, SimulationConfig.MORNING_CORPORATE_AGENTS);
