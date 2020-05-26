@@ -68,4 +68,8 @@ public class DefaultSimConfig implements ISimulationConfig {
     public IStrategy getStrategy() {
         return SimulationConfig.strategy;
     }
+
+    public int getQueueWarmupIterations(){
+        return SimulationConfig.MAX_QUEUE_WARM_UP_ITERATIONS;
+    }
 }

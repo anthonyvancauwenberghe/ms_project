@@ -73,7 +73,7 @@ public class HistogramChart {
 
         ChartFrame frame = new ChartFrame(this.title, chart);
         frame.pack();
-        frame.setSize(1024, 768);
+        frame.setSize(1440, 768);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);

@@ -10,6 +10,8 @@ public class Simulation {
 
     protected ISimulationConfig config;
 
+    protected boolean queueWarmup = true;
+
     protected SinkAnalysisAggregator consumer = new SinkAnalysisAggregator("Consumer");
     protected SinkAnalysisAggregator corporate = new SinkAnalysisAggregator("Corporate");
 
@@ -27,10 +29,19 @@ public class Simulation {
         this.analysis = analysis;
     }
 
+    public Simulation(ISimulationConfig config, boolean analysis, boolean warmupQueue) {
+        this.config = config;
+        this.analysis = analysis;
+        this.queueWarmup = warmupQueue;
+    }
+
     public void run() {
 
         //log start time of simulation
         this.simulationStartTime = System.nanoTime();
+
+        if (this.queueWarmup)
+            this.warmUpQueue();
 
         for (int i = 0; i < this.config.getIterations(); i++) {
 
@@ -56,6 +67,75 @@ public class Simulation {
             this.analysis();
 
         System.out.println("Total daily call center cost: " + AgentDailyCostCalculator.totalCost() + "€");
+    }
+
+    public void warmUpQueue() {
+
+        System.out.println("Warming up queue ..");
+        ISimulationConfig warmupConfig = this.config;
+
+        Simulator sim = new Simulator(config);
+
+        int maxConsumerQueue = 0;
+        int maxCorporateQueue = 0;
+
+        int countConsumerQueueMaxLastChanged = 0;
+        int countCorporateQueueMaxLastChanged = 0;
+
+        int currentConsumerQueue, currentCorporateQueue;
+
+        int counter = 0;
+        boolean reachedSteadyState = false;
+        for (int i = 0; i < this.config.getQueueWarmupIterations(); i++) {
+
+            //Start a new simulation and run it
+            sim = new Simulator(config);
+            sim.run();
+
+            counter++;
+
+            currentConsumerQueue = sim.getProcessor().getQueues()[0].count();
+            currentCorporateQueue = sim.getProcessor().getQueues()[0].count();
+
+            if (currentConsumerQueue > maxConsumerQueue) {
+                maxConsumerQueue = currentConsumerQueue;
+                countConsumerQueueMaxLastChanged = 0;
+            } else {
+                countConsumerQueueMaxLastChanged++;
+            }
+
+            if (currentCorporateQueue > maxCorporateQueue) {
+                maxCorporateQueue = currentCorporateQueue;
+                countCorporateQueueMaxLastChanged = 0;
+            } else {
+                countCorporateQueueMaxLastChanged++;
+            }
+
+            if (countConsumerQueueMaxLastChanged > 50 && countCorporateQueueMaxLastChanged > 50) {
+                reachedSteadyState = true;
+                break;
+            }
+
+
+            //Transfer over the queue from the last iteration to the new simulation
+            warmupConfig.setQueues(sim.getProcessor().getQueues());
+        }
+        if (sim.isExecuted())
+            this.config.setQueues(sim.getProcessor().getQueues());
+
+        System.out.println("Warming up queue finished. ");
+
+        if (reachedSteadyState)
+            System.out.println("Ran " + counter + " warmup iterations. Reached a steady state after " + (counter - 50) + " iterations");
+        else
+            System.out.println("Could not reach a steady state. Stopped after " + counter + " iterations");
+
+        System.out.println("Starting simulation..");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -105,9 +185,9 @@ public class Simulation {
                 " seconds");
 
         double confidence = 0.99;
-        String confidenceString = confidence*100 + "% ";
-        double[] fiveMinuteProbability = consumer.avgProbabilityQueueTimeLessThanWithConfidence(5.0 * 60,0,SimulationConfig.SIMULATION_RUNTIME,confidence);
-        double[] tenMinuteProbability = consumer.avgProbabilityQueueTimeLessThanWithConfidence(10.0 * 60,0,SimulationConfig.SIMULATION_RUNTIME,confidence);
+        String confidenceString = confidence * 100 + "% ";
+        double[] fiveMinuteProbability = consumer.avgProbabilityQueueTimeLessThanWithConfidence(5.0 * 60, 0, SimulationConfig.SIMULATION_RUNTIME, confidence);
+        double[] tenMinuteProbability = consumer.avgProbabilityQueueTimeLessThanWithConfidence(10.0 * 60, 0, SimulationConfig.SIMULATION_RUNTIME, confidence);
 
         System.out.println("");
         System.out.println("");
@@ -128,8 +208,8 @@ public class Simulation {
         System.out.println("");
         System.out.println("");
 
-        double[] threeMinuteProbability = corporate.avgProbabilityQueueTimeLessThanWithConfidence(3.0 * 60,0,SimulationConfig.SIMULATION_RUNTIME,confidence);
-        double[] sevenMinuteProbability = corporate.avgProbabilityQueueTimeLessThanWithConfidence(7.0 * 60,0,SimulationConfig.SIMULATION_RUNTIME,confidence);
+        double[] threeMinuteProbability = corporate.avgProbabilityQueueTimeLessThanWithConfidence(3.0 * 60, 0, SimulationConfig.SIMULATION_RUNTIME, confidence);
+        double[] sevenMinuteProbability = corporate.avgProbabilityQueueTimeLessThanWithConfidence(7.0 * 60, 0, SimulationConfig.SIMULATION_RUNTIME, confidence);
 
         System.out.println("--------------------------");
         System.out.println("CORPORATE QUEUE TIME PROBABILITIES");

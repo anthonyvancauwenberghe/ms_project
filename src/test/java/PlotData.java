@@ -4,17 +4,20 @@ import configs.ArrivalRatesConfig;
 import configs.ServiceTimesConfig;
 import factories.ServiceTimeFactory;
 import models.ArrivalRate;
+import org.jfree.chart.axis.NumberTickUnit;
+
+import java.text.DecimalFormat;
 
 public class PlotData {
 
     public static void main(String[] args) {
-        plotHistogram();
+       //plotHistogram();
 
         //plotCorporateArrivals();
         //plotConsumerArrivals();
 
-        //plotConsumerServiceTime();
-        //plotCorporateServiceTime();
+        plotConsumerServiceTime();
+        plotCorporateServiceTime();
     }
 
 
@@ -44,22 +47,40 @@ public class PlotData {
 
     public static void plotConsumerServiceTime() {
         ServiceTimeFactory consumerServiceTime = (new ServiceTimeFactory(ServiceTimesConfig.CONSUMER_SERVICE_TIME_MEAN, ServiceTimesConfig.CONSUMER_SERVICE_TIME_STD, ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT));
-        LineChart consumerServiceTimeChart = new LineChart("Consumer Service time density", "time (seconds)", "Probability", consumerServiceTime.probabilities(500));
+        HistogramChart consumerServiceTimeChart = new HistogramChart("Consumer Service time density", "time (seconds)", "Probability");
+        consumerServiceTimeChart.addSeries("Consumer Service time",consumerServiceTime.probabilities(200));
+
+        consumerServiceTimeChart.getRangeAxis().setRange(0, 0.07);
+
+        NumberTickUnit tickUnit = new NumberTickUnit(0.01) {
+            @Override
+            public String valueToString(double value) {
+                return new DecimalFormat("##.00").format(value * 100) + " %";
+            }
+        };
+
+        consumerServiceTimeChart.getRangeAxis().setTickUnit(tickUnit);
+
         consumerServiceTimeChart.render();
     }
 
     public static void plotCorporateServiceTime() {
         ServiceTimeFactory corporateServiceTime = (new ServiceTimeFactory(ServiceTimesConfig.CORPORATE_SERVICE_TIME_MEAN, ServiceTimesConfig.CORPORATE_SERVICE_TIME_STD, ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT));
-        LineChart corporateServiceTimeChart = new LineChart("Corporate Service time density", "time (seconds)", "Probability", corporateServiceTime.probabilities(500));
+        HistogramChart corporateServiceTimeChart = new HistogramChart("Corporate Service time density", "time (seconds)", "Probability");
+        corporateServiceTimeChart.addSeries("Corporate Service Time",corporateServiceTime.probabilities(500));
+
+        corporateServiceTimeChart.getRangeAxis().setRange(0, 0.035);
+
+        NumberTickUnit tickUnit = new NumberTickUnit(0.01) {
+            @Override
+            public String valueToString(double value) {
+                return new DecimalFormat("##.00").format(value * 100) + " %";
+            }
+        };
+
+        corporateServiceTimeChart.getRangeAxis().setTickUnit(tickUnit);
+
         corporateServiceTimeChart.render();
-    }
-
-    public static void plotHistogram(){
-        HistogramChart chart = new HistogramChart("test","x","y");
-        chart.addSeries("testData",new double[]{1.0,5.6,8.0,1.0,5.6,8.0,1.0,5.6,8.0,1.0,5.6,8.0});
-        chart.addSeries("testData2",new double[]{3.0,9.0,10,3.0,9.0,10,3.0,9.0,10,3.0,9.0,10,8.0});
-
-        chart.render();
     }
 
 }

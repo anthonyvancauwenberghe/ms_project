@@ -28,6 +28,17 @@ public class TestSimulator {
         final double[] times = new double[5];
 
         ISimulationConfig config = new ISimulationConfig() {
+
+            @Override
+            public ISimulationConfig clone() {
+                return null;
+            }
+
+            @Override
+            public int getQueueWarmupIterations() {
+                return 0;
+            }
+
             @Override
             public AbstractEventFactory[] getSources() {
                 return new AbstractEventFactory[]{

@@ -34,7 +34,6 @@ public class Simulator {
     }
 
     public void run() {
-        long startTime = System.nanoTime();
 
         if (this.executed)
             throw new RuntimeException("cannot run the same simulation more than once. Create a new instance to run multiple iterations.");
@@ -42,12 +41,6 @@ public class Simulator {
         this.initConfig();
         this.bootSources();
         this.processor.start();
-
-/*        if (SimulationConfig.DEBUG && this.processor.getQueues().length > 1) {
-            double duration = (((double) (System.nanoTime() - startTime)) / 1000000000);
-            DecimalFormat f = new DecimalFormat("##.0000");
-            this.queueInfo(f.format(duration));
-        }*/
 
         this.executed = true;
     }
@@ -58,15 +51,6 @@ public class Simulator {
 
     public SinkAnalysis corporateAnalysis() {
         return new SinkAnalysis(this.processor.getSinks()[1], this.processor.getQueues()[1], "Corporate");
-    }
-
-    public void queueInfo(String duration) {
-        System.out.println("------------------------------");
-        System.out.println("Ran simulation in " + duration + " seconds");
-        System.out.println(this.processor.getQueues()[0].count() + " consumer calls left in queue");
-        System.out.println(this.processor.getQueues()[1].count() + " corporate calls left in queue");
-        System.out.println(this.processor.getQueues()[0].count() + this.processor.getQueues()[1].count() + " total calls left in queue");
-        System.out.println("------------------------------");
     }
 
     /**
@@ -124,5 +108,9 @@ public class Simulator {
 
     public IEventProcessor getProcessor() {
         return processor;
+    }
+
+    public boolean isExecuted() {
+        return executed;
     }
 }

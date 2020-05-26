@@ -28,15 +28,15 @@ public class TInterval implements ITInterval {
         double base = (1 / (this.sampleSize() - 1.0));
         double mean = this.sampleMean();
         double sum = 0;
-        double result,value;
+        double result, value;
 
-        for(int i = 0; i<this.data.length; i ++){
+        for (int i = 0; i < this.data.length; i++) {
             value = data[i];
-            result = Math.pow (value-mean,2);
+            result = Math.pow(value - mean, 2);
             sum = sum + result;
         }
 
-        return Math.sqrt(base*sum);
+        return Math.sqrt(base * sum);
     }
 
     @Override

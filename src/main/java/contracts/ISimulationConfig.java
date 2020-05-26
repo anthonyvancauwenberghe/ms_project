@@ -12,4 +12,6 @@ public interface ISimulationConfig {
     public int getIterations();
 
     public IStrategy getStrategy();
+
+    public int getQueueWarmupIterations();
 }

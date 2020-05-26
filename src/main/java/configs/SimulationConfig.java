@@ -7,7 +7,9 @@ import factories.*;
 import strategies.TimedConsumerQueueTimeStrategy;
 public class SimulationConfig {
 
-    public static final int SIMULATION_COUNT = 1000;
+    public static final int SIMULATION_COUNT = 500;
+
+    public static final int MAX_QUEUE_WARM_UP_ITERATIONS = 200;
 
     public static final int SIMULATION_RUNTIME = 24*60*60;
 

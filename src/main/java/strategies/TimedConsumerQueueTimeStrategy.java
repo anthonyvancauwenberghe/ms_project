@@ -34,7 +34,8 @@ public class TimedConsumerQueueTimeStrategy extends AbstractStrategy {
         }
 
         if ((tme > 21 * 3600 && tme < 24 * 3600) || (tme > 0 && tme < 6 * 3600)) {
-            if ((this.getMaxConsumerQueueTime(tme) > this.maxConsumerQueueTime) && (this.availableCorporateAgents() >= this.minAvailableCorporateAgents))
+            if ((this.getMaxConsumerQueueTime(tme) > this.maxConsumerQueueTime) &&
+                    (this.availableCorporateAgents() >= this.minAvailableCorporateAgents))
                 return this.corporateQueue;
         }
 

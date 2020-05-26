@@ -170,16 +170,15 @@ public class SinkAnalysisAggregator {
         HistogramChart chart = new HistogramChart(confidenceString + " Interval " + this.productType + " Queue times ( " + this.count() + " simulation days) ", "hour", "queue time (min)");
 
         XYPlot plot3 = chart.getChart().getXYPlot();
-        plot3.setOutlineVisible(false);
         plot3.setRenderer(0, new SamplingXYLineRenderer());
-        XYItemRenderer xyir3 = plot3.getRenderer();
-        xyir3.setSeriesPaint(0, ChartColor.LIGHT_GRAY);
+        XYItemRenderer xyir3 = plot3.getRenderer(0);
+        xyir3.setSeriesPaint(0, ChartColor.LIGHT_BLUE);
         chart.addSeries("Avg Queue time", this.avgQueueTimesPerMinute());
-
 
 
         XYBarRenderer bar1= new XYBarRenderer();
         bar1.setDrawBarOutline(false);
+        bar1.setShadowVisible(false);
         XYPlot plot1 = chart.getChart().getXYPlot();
         plot1.setRenderer(1, bar1);
         plot1.setOutlineVisible(false);
@@ -190,14 +189,15 @@ public class SinkAnalysisAggregator {
 
         XYBarRenderer bar = new XYBarRenderer();
         bar.setDrawBarOutline(false);
+        bar.setShadowVisible(false);
         XYPlot plot2 = chart.getChart().getXYPlot();
         plot2.setRenderer(2, bar);
         plot2.setOutlineVisible(false);
         XYItemRenderer xyir2 = plot1.getRenderer(2);
         xyir2.setSeriesPaint(0, ChartColor.LIGHT_RED);
-        chart.addSeries("Avg Queue time Lower Bound", confidenceInterval[1]);
+        chart.addSeries("Avg Queue time Upper Bound", confidenceInterval[1],0.46);
 
-        //chart.getRangeAxis().setRange(0, 5);
+        chart.getRangeAxis().setRange(0, 5);
 
         NumberTickUnit tickUnit = new NumberTickUnit(60) {
             @Override
