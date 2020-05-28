@@ -5,13 +5,14 @@ import contracts.IArrivalRateFactory;
 import contracts.IStrategy;
 import factories.*;
 import strategies.AgentsIdleStrategy;
+import strategies.NoStrategy;
 
 public class SimulationConfig {
 
     /**
      * Determines how many simulations days will be run
      */
-    public static final int SIMULATION_COUNT =2000;
+    public static final int SIMULATION_COUNT =200;
 
     /**
      * Determines if the queue will be warmed to reach a steady state first
