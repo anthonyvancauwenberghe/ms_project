@@ -4,20 +4,19 @@ import contracts.Distribution;
 import contracts.IArrivalRateFactory;
 import contracts.IStrategy;
 import factories.*;
-
-import strategies.TimedConsumerQueueTimeStrategy;
+import strategies.TimedCorporateAgentsIdleStrategy;
 
 public class SimulationConfig {
 
     /**
      * Determines how many simulations days will be run
      */
-    public static final int SIMULATION_COUNT =50;
+    public static final int SIMULATION_COUNT =2000;
 
     /**
      * Determines if the queue will be warmed to reach a steady state first
      */
-    public static final boolean WAMRUP_QUEUE = true;
+    public static final boolean WARMUP_QUEUE = true;
 
     /**
      * Determines the maximum amount of iterations of queue warming.
@@ -41,7 +40,7 @@ public class SimulationConfig {
     /**
      * Determines the strategy of when corporate workers will help out consumers
      */
-    public static final IStrategy strategy = new TimedConsumerQueueTimeStrategy();
+    public static final IStrategy strategy = new TimedCorporateAgentsIdleStrategy();
 
     /**
      * Determines the factory for the consumer arrival rates
