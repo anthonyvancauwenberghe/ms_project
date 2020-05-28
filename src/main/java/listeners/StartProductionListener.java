@@ -20,9 +20,11 @@ public class StartProductionListener implements IListener<ProductionStartedEvent
     @Override
     public void handle(ProductionStartedEvent event) {
         event.getProduct().stamp(event.getExecutionTime(), "IN_PRODUCTION", event.getStation());
-        event.getProduct().setQueueTime(event.getExecutionTime() - event.getProduct().getTimes().get(0));
+
+        if (!event.getProduct().hasQueueTime())
+            event.getProduct().setQueueTime(event.getExecutionTime() - event.getProduct().getTimes().get(0));
 
         event.getProduct().setServicedBy(event.getMachine().getType());
-        this.events.add(new ProductionFinishedEvent(event.getExecutionTime() + event.getProduct().getProductionTime(), event.getProduct(), event.getMachine()));
+        this.events.add(new ProductionFinishedEvent(event.getExecutionTime() + event.getProduct().getTimeInProduction(), event.getProduct(), event.getMachine()));
     }
 }

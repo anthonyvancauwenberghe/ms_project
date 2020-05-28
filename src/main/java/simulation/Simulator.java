@@ -82,7 +82,10 @@ public class Simulator {
     public void queue(IQueue queue) {
         // Transfer over the products are waiting in the queue
         for (Product product : queue.getQueue()) {
-            AbstractEvent event = new ProductCreatedEvent(product.getTimes().get(0) - SimulationConfig.SIMULATION_RUNTIME, "OLD_QUEUE", new Product(product.type()));
+            Product aProduct = new Product(product.type());
+            aProduct.addAdditionalQueueTime(SimulationConfig.SIMULATION_RUNTIME - product.getArrivalTime());
+            AbstractEvent event = new ProductCreatedEvent(product.getTimes().get(0) - SimulationConfig.SIMULATION_RUNTIME, "OLD_QUEUE", aProduct);
+
             this.processor.addEvent(event);
         }
 
@@ -92,8 +95,9 @@ public class Simulator {
             if (machine.isBusy()) {
                 Product product = machine.getProduct();
                 Product newProduct = new Product(product.type());
-                newProduct.setProductionTime(product.getTimes().get(1) + product.getProductionTime() - SimulationConfig.SIMULATION_RUNTIME);
-                AbstractEvent event = new ProductCreatedEvent(product.getTimes().get(0) - SimulationConfig.SIMULATION_RUNTIME, "OLD_QUEUE", newProduct);
+                newProduct.setProductionTime(product.getTimes().get(1) + product.getTimeInProduction() - SimulationConfig.SIMULATION_RUNTIME);
+                newProduct.setQueueTime(product.getQueueTime());
+                AbstractEvent event = new ProductCreatedEvent(product.getTimes().get(0) - SimulationConfig.SIMULATION_RUNTIME, "OLD_FROM_PRODUCTION", newProduct);
                 this.processor.addEvent(event);
             }
         }

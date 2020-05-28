@@ -71,7 +71,7 @@ public abstract class AbstractStrategy implements IStrategy {
         double max = -1;
 
         for (Product product : this.consumerQueue.getQueue()) {
-            double queueTime = currentTime - product.getArrivalTimeForAnalysis(product.getArrivalTime()) ;
+            double queueTime = currentTime - product.getArrivalTime() ;
 
             if (queueTime > max)
                 max = queueTime;

@@ -28,6 +28,8 @@ public class Product {
 
     protected double queueTime = -1;
 
+    protected double additionalQueueTime = 0.0;
+
     protected double arrivalTime = -1.2345;
 
     /**
@@ -56,18 +58,18 @@ public class Product {
         this.productionTime = time;
     }
 
-    public double getProductionTime() {
+    public double getTimeInProduction() {
         if (this.productionTime == -1)
             this.productionTime = this.type().getServiceTimeDistribution().sample();
 
         return this.productionTime;
     }
 
-    public double getArrivalTimeForAnalysis(double arrivalTime) {
-        if (arrivalTime < 0) {
-            return this.getArrivalTimeForAnalysis(arrivalTime + SimulationConfig.SIMULATION_RUNTIME);
+    public double backTrackTimeForAnalysis(double time) {
+        if (time < 0) {
+            return this.backTrackTimeForAnalysis(time + SimulationConfig.SIMULATION_RUNTIME);
         }
-        return arrivalTime;
+        return time;
     }
 
     public void setQueueTime(double time) {
@@ -79,13 +81,13 @@ public class Product {
 
     public double getQueueTime() {
         if (!this.hasQueueTime())
-            throw new RuntimeException("Product service time not initialized");
+            throw new RuntimeException("Product queue time not initialized");
 
-        return this.queueTime;
+        return this.queueTime + this.additionalQueueTime;
     }
 
     public boolean hasQueueTime() {
-        return this.queueTime != -1;
+        return this.queueTime >= 0;
     }
 
     public void setArrivalTime(double time) {
@@ -147,5 +149,13 @@ public class Product {
 
     public ProductType getType() {
         return type;
+    }
+
+    public double getProductionTime() {
+        return productionTime;
+    }
+
+    public double addAdditionalQueueTime(double time) {
+        return additionalQueueTime += time;
     }
 }

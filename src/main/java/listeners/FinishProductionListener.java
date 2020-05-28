@@ -8,6 +8,8 @@ import models.CEventList;
 import models.Product;
 import models.Sink;
 
+import java.util.Random;
+
 public class FinishProductionListener implements IListener<ProductionFinishedEvent> {
 
     protected final IQueue queue;
@@ -27,7 +29,8 @@ public class FinishProductionListener implements IListener<ProductionFinishedEve
 
         event.getProduct().stamp(event.getExecutionTime(), "FINISHED_PRODUCTION", event.getStation());
 
-        this.sink.giveProduct(event.getProduct());
+            this.sink.giveProduct(event.getProduct());
+
 
         //ONCE A MACHINE IS FINISHED SET IT TO IDLE AND ASSIGN A NEW PRODUCT TO IT
 

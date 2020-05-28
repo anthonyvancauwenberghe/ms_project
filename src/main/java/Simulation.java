@@ -117,7 +117,7 @@ public class Simulation {
      */
     public static void main(String[] args) {
         //initialize a default simulation config (the simulation will run with the parameters defined in the config files)
-        (new Simulation(new DefaultSimConfig(), AnalysisConfig.PERFORM_ANALYSIS, SimulationConfig.WAMRUP_QUEUE)).run();
+        (new Simulation(new DefaultSimConfig(), AnalysisConfig.PERFORM_ANALYSIS, SimulationConfig.WARMUP_QUEUE)).run();
     }
 
 }

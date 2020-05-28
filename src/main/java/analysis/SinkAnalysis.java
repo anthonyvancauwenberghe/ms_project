@@ -79,16 +79,16 @@ public class SinkAnalysis {
 
         //add products from sink
         for (Product product : this.products) {
-            if (product.getArrivalTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.getArrivalTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
+            if (product.backTrackTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.backTrackTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
                 products.add(product);
             }
         }
 
         //add products from queue
         for (Product product : this.queue.getQueue()) {
-            if (product.getArrivalTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.getArrivalTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
+            if (product.backTrackTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.backTrackTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
                 if (!product.hasQueueTime()) {
-                    product.setQueueTime(SimulationConfig.SIMULATION_RUNTIME - product.getArrivalTimeForAnalysis(product.getArrivalTime()));
+                    product.setQueueTime(SimulationConfig.SIMULATION_RUNTIME - product.backTrackTimeForAnalysis(product.getArrivalTime()));
                 }
 
                 products.add(product);
@@ -99,7 +99,7 @@ public class SinkAnalysis {
         for (Machine machine : this.queue.getMachines()) {
             if (machine.isBusy()) {
                 Product product = machine.getProduct();
-                if (product.getArrivalTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.getArrivalTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
+                if (product.backTrackTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.backTrackTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
                     products.add(product);
                 }
             }
@@ -115,7 +115,7 @@ public class SinkAnalysis {
     }
 
     public double getAvgProductionTime() {
-        return this.averageProductValue(this.getProductsWithArrivalBetween(0, SimulationConfig.SIMULATION_RUNTIME), product -> product.getProductionTime());
+        return this.averageProductValue(this.getProductsWithArrivalBetween(0, SimulationConfig.SIMULATION_RUNTIME), product -> product.getTimeInProduction());
     }
 
     public double[] getAvgProductionTimeProbabilities() {
@@ -123,7 +123,7 @@ public class SinkAnalysis {
         ProductType type = ProductType.CONSUMER;
         double[] total = new double[1000];
         for (Product product : this.products) {
-            int interval = (int) (product.getProductionTime() - (product.getProductionTime() % 1));
+            int interval = (int) (product.getTimeInProduction() - (product.getTimeInProduction() % 1));
             total[interval]++;
             type = product.type();
         }

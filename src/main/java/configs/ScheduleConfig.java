@@ -30,7 +30,7 @@ public class ScheduleConfig {
      * Determines the amount of consumer agents in the night shift
      * 22-06
      */
-    public static final int NIGHT_CONSUMER_AGENTS = 1;
+    public static final int NIGHT_CONSUMER_AGENTS = 2;
 
     /**
      * Determines the amount of corporate agents in the night shift
