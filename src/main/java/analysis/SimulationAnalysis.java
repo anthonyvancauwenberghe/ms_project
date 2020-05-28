@@ -21,8 +21,8 @@ public class SimulationAnalysis {
             this.analyzeBusinessConstraints();
 
         if (AnalysisConfig.PLOT_QUEUE_TIMES) {
-            consumer.plotAvgMinutelyQueueTimesWithConfidence(0.99, true);
-            corporate.plotAvgMinutelyQueueTimesWithConfidence(0.99, true);
+            consumer.plotAvgMinutelyQueueTimesWithConfidence(0.99, false);
+            corporate.plotAvgMinutelyQueueTimesWithConfidence(0.99, false);
         }
 
         if (AnalysisConfig.PLOT_ARRIVALS) {

@@ -4,20 +4,20 @@ import abstracts.AbstractStrategy;
 import contracts.IQueue;
 import models.Product;
 
-public class TimedCorporateAgentsIdleStrategy extends AbstractStrategy {
+public class MaxConsumerTimeStrategy extends AbstractStrategy {
 
     protected int minAvailableCorporateAgents;
 
-    protected int minConsumerQueueCount;
+    protected double maxConsumerQueueTime;
 
-    public TimedCorporateAgentsIdleStrategy() {
+    public MaxConsumerTimeStrategy() {
         this.minAvailableCorporateAgents = 2;
-        this.minConsumerQueueCount = 10;
+        this.maxConsumerQueueTime = 5*60;
     }
 
-    public TimedCorporateAgentsIdleStrategy(int minAvailableCorporateAgents, int minConsumerQueueCount) {
+    public MaxConsumerTimeStrategy(int minAvailableCorporateAgents, double maxConsumerQueueTime) {
         this.minAvailableCorporateAgents = minAvailableCorporateAgents;
-        this.minConsumerQueueCount = minConsumerQueueCount;
+        this.maxConsumerQueueTime = maxConsumerQueueTime;
     }
 
     @Override
@@ -30,12 +30,12 @@ public class TimedCorporateAgentsIdleStrategy extends AbstractStrategy {
             return consumerQueue;
 
         if (tme > 11 * 3600 && tme < 17 * 3600) {
-                return this.consumerQueue;
+            return this.consumerQueue;
         }
 
-        if ((tme > 21 * 3600 && tme < 24 * 3600) || (tme>0 && tme < 6 * 3600)) {
-            if ((this.productInConsumerQueue() > this.minConsumerQueueCount) &&
-                    (this.availableCorporateAgents() >= 2))
+        if ((tme > 21 * 3600 && tme < 24 * 3600) || (tme > 0 && tme < 6 * 3600)) {
+            if ((this.getMaxConsumerQueueTime(tme) > this.maxConsumerQueueTime) &&
+                    (this.availableCorporateAgents() >= this.minAvailableCorporateAgents))
                 return this.corporateQueue;
         }
 

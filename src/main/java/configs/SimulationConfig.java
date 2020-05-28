@@ -4,7 +4,7 @@ import contracts.Distribution;
 import contracts.IArrivalRateFactory;
 import contracts.IStrategy;
 import factories.*;
-import strategies.TimedCorporateAgentsIdleStrategy;
+import strategies.AgentsIdleStrategy;
 
 public class SimulationConfig {
 
@@ -40,7 +40,7 @@ public class SimulationConfig {
     /**
      * Determines the strategy of when corporate workers will help out consumers
      */
-    public static final IStrategy strategy = new TimedCorporateAgentsIdleStrategy();
+    public static final IStrategy strategy = new AgentsIdleStrategy();
 
     /**
      * Determines the factory for the consumer arrival rates
