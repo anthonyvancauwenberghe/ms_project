@@ -1,7 +1,8 @@
 package factories;
 
+import configs.SimulationConfig;
 import contracts.IArrivalRateFactory;
-import models.NewArrivalRate;
+import models.ArrivalRate;
 
 import java.util.ArrayList;
 
@@ -11,13 +12,18 @@ public class CorporateArrivalTimeFactory implements IArrivalRateFactory {
 
     protected int period;
 
+    public CorporateArrivalTimeFactory(double[] hourRanges) {
+        this.ranges = hourRanges;
+        this.period = SimulationConfig.SIMULATION_RUNTIME -1;
+    }
+
     public CorporateArrivalTimeFactory(double[] hourRanges, int period) {
         this.ranges = hourRanges;
         this.period = period-1;
     }
 
     @Override
-    public double[] sampleInterArrivalRates() {
+    public double[] sampleArrivalRates() {
         ArrayList<Double> t = new ArrayList<>();
         ArrayList<Double> s = new ArrayList<>();
 
@@ -72,7 +78,7 @@ public class CorporateArrivalTimeFactory implements IArrivalRateFactory {
     }
 
     @Override
-    public NewArrivalRate build() {
-        return new NewArrivalRate(this);
+    public ArrivalRate build() {
+        return new ArrivalRate(this);
     }
 }

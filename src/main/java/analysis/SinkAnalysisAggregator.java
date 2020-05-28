@@ -6,14 +6,12 @@ import contracts.Aggregate;
 import org.jfree.chart.ChartColor;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.*;
-import statistics.TInterval;
+import statistics.TConfInterval;
 
-import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class SinkAnalysisAggregator {
     protected ArrayList<SinkAnalysis> sinkAnalyses = new ArrayList<>();
@@ -70,6 +68,17 @@ public class SinkAnalysisAggregator {
         return aggregated;
     }
 
+    public double[] avgServiceTimesPerSimulation() {
+        double times[] = new double[this.sinkAnalyses.size()];
+        int counter = 0;
+        for (SinkAnalysis analysis : this.sinkAnalyses) {
+            times[counter] += analysis.getAvgProductionTime() / this.sinkAnalyses.size();
+            counter++;
+        }
+
+        return times;
+    }
+
     public double avgProbabilityQueueTimeLessThan(double duration, double minTime, double maxTime) {
         double probability = 0;
         for (SinkAnalysis analysis : this.sinkAnalyses) {
@@ -90,13 +99,13 @@ public class SinkAnalysisAggregator {
         }
 
 
-        TInterval tInterval = new TInterval(probabilities, confidence);
+        TConfInterval tInterval = new TConfInterval(probabilities, confidence);
         double lowerBound = tInterval.lowerBound();
 
         double[] probabilityWithConfidence = new double[3];
         probabilityWithConfidence[0] = lowerBound < 0 ? 0 : lowerBound;
         probabilityWithConfidence[1] = tInterval.upperBound();
-        probabilityWithConfidence[2] = probability/count;
+        probabilityWithConfidence[2] = probability / count;
 
         return probabilityWithConfidence;
     }
@@ -112,6 +121,43 @@ public class SinkAnalysisAggregator {
 
     public double[] avgQueueTimesPerMinute() {
         return this.aggregatePerMinute(a -> a.avgQueueTimePerMinute());
+    }
+
+    public double[] totalAvgQueueTimePerSimulation() {
+        double[] times = new double[this.sinkAnalyses.size()];
+        int counter = 0;
+        for (SinkAnalysis analysis : this.sinkAnalyses) {
+            times[counter] = analysis.avgDailyQueueTime() / this.sinkAnalyses.size();
+            counter++;
+        }
+        return times;
+    }
+
+    public double[] avgServiceTimeProbabilities() {
+
+        double[] times = new double[1000];
+
+
+        for (SinkAnalysis analysis : this.sinkAnalyses) {
+            double[] simulationTimes = analysis.getAvgProductionTimeProbabilities();
+            for (int i = 0; i < simulationTimes.length; i++) {
+                times[i] += simulationTimes[i] / sinkAnalyses.size();
+
+            }
+        }
+
+        return times;
+    }
+
+
+    public double[] totalQueueHourTimePerSimulation() {
+        double[] times = new double[this.sinkAnalyses.size()];
+        int counter = 0;
+        for (SinkAnalysis analysis : this.sinkAnalyses) {
+            times[counter] = analysis.totalDailyQueueTime() / 3600;
+            counter++;
+        }
+        return times;
     }
 
     public double[][] avgQueueTimesPerMinutePerSimulation() {
@@ -135,6 +181,7 @@ public class SinkAnalysisAggregator {
         return simulationQueueTimesPerMinute;
     }
 
+
     public double[][] calculateConfidenceQueueTimesPerMinute(double confidence) {
         double[][] confidencePerMinute = new double[2][24 * 60];
 
@@ -146,7 +193,7 @@ public class SinkAnalysisAggregator {
 
             if (counter > 16 * 60)
                 test = "";
-            TInterval tInterval = new TInterval(simulationMinuteQueueTime, confidence);
+            TConfInterval tInterval = new TConfInterval(simulationMinuteQueueTime, confidence);
             double lowerBound = tInterval.lowerBound();
             confidencePerMinute[0][counter] = lowerBound < 0 ? 0 : lowerBound;
             confidencePerMinute[1][counter] = tInterval.upperBound();
@@ -163,7 +210,7 @@ public class SinkAnalysisAggregator {
         return this.aggregatePerMinute(a -> a.arrivalsPerMinute());
     }
 
-    public void plotAvgMinutelyQueueTimesWithConfidence(double confidence) {
+    public void plotAvgMinutelyQueueTimesWithConfidence(double confidence, boolean autoscale) {
         double[][] confidenceInterval = this.calculateConfidenceQueueTimesPerMinute(confidence);
 
         String confidenceString = confidence * 100 + " %";
@@ -176,7 +223,7 @@ public class SinkAnalysisAggregator {
         chart.addSeries("Avg Queue time", this.avgQueueTimesPerMinute());
 
 
-        XYBarRenderer bar1= new XYBarRenderer();
+        XYBarRenderer bar1 = new XYBarRenderer();
         bar1.setDrawBarOutline(false);
         bar1.setShadowVisible(false);
         XYPlot plot1 = chart.getChart().getXYPlot();
@@ -195,9 +242,10 @@ public class SinkAnalysisAggregator {
         plot2.setOutlineVisible(false);
         XYItemRenderer xyir2 = plot1.getRenderer(2);
         xyir2.setSeriesPaint(0, ChartColor.LIGHT_RED);
-        chart.addSeries("Avg Queue time Upper Bound", confidenceInterval[1],0.46);
+        chart.addSeries("Avg Queue time Upper Bound", confidenceInterval[1], 0.46);
 
-        chart.getRangeAxis().setRange(0, 5);
+        if (!autoscale)
+            chart.getRangeAxis().setRange(0, 5);
 
         NumberTickUnit tickUnit = new NumberTickUnit(60) {
             @Override
@@ -222,6 +270,48 @@ public class SinkAnalysisAggregator {
                 return new DecimalFormat("##").format(value) + "h";
             }
         };
+
+        chart.getDomainAxis().setTickUnit(tickUnit);
+        chart.render();
+    }
+
+    public void plotAvgServiceTimes() {
+        HistogramChart chart = new HistogramChart(this.productType + " Avg Service times ( " + this.count() + " simulation days)", "simulations", "Service time (sec)");
+        chart.addSeries(this.productType + " Service times", this.avgServiceTimesPerSimulation());
+
+        NumberTickUnit tickUnit = new NumberTickUnit(10);
+
+        chart.getDomainAxis().setTickUnit(tickUnit);
+        chart.render();
+    }
+
+
+    public void plotAvgServiceTimeProbabilities() {
+        HistogramChart chart = new HistogramChart(this.productType + " Service Time Probability Density ( " + this.count() + " simulation days)", "Service Time (sec)", "Probability");
+        chart.addSeries(this.productType + " Service times", this.avgServiceTimeProbabilities());
+
+        NumberTickUnit tickUnit = new NumberTickUnit(0.001) {
+            @Override
+            public String valueToString(double value) {
+                return new DecimalFormat("##.00").format(value * 100) + " %";
+            }
+        };
+
+        chart.getRangeAxis().setTickUnit(tickUnit);
+        chart.getDomainAxis().setRange(0, 500);
+        chart.render();
+    }
+
+    public void plotTotalDailyQueueTime() {
+        HistogramChart chart = new HistogramChart(this.productType + " Total Queue Time Per Simulation", "simulation iteration", "queue time (min)");
+
+        XYPlot plot3 = chart.getChart().getXYPlot();
+        plot3.setRenderer(0, new SamplingXYLineRenderer());
+        XYItemRenderer xyir3 = plot3.getRenderer(0);
+        xyir3.setSeriesPaint(0, ChartColor.LIGHT_BLUE);
+        chart.addSeries("Total Daily Queue time", this.totalQueueHourTimePerSimulation());
+
+        NumberTickUnit tickUnit = new NumberTickUnit(1);
 
         chart.getDomainAxis().setTickUnit(tickUnit);
         chart.render();

@@ -13,6 +13,7 @@ import events.ProductCreatedEvent;
 import factories.AgentFactory;
 import factories.ProductEventFactory;
 import models.Sink;
+import simulation.Simulator;
 import strategies.NoStrategy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

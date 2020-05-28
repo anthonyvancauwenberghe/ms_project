@@ -14,7 +14,6 @@ public class TestSimulation {
         int result = (int) (time-value)/3600;
 
         assertEquals(2,result);
-
     }
 
 

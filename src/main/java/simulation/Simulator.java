@@ -1,3 +1,5 @@
+package simulation;
+
 import analysis.SinkAnalysis;
 import configs.SimulationConfig;
 import abstracts.AbstractEvent;

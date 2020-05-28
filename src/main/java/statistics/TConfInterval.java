@@ -1,16 +1,18 @@
 package statistics;
 
 import contracts.ITInterval;
-import org.apache.commons.math3.distribution.TDistribution;
+import utils.FileUtil;
 
-public class TInterval implements ITInterval {
+public class TConfInterval implements ITInterval {
 
     protected double[] data;
 
     protected double confidence;
 
+    protected final static double[][] tTable = (new FileUtil<double[][]>("src/main/resources/tinterval.txt")).readObjectFromFile();
 
-    public TInterval(double[] data, double confidence) {
+
+    public TConfInterval(double[] data, double confidence) {
         this.data = data;
         this.confidence = confidence;
 
@@ -53,8 +55,29 @@ public class TInterval implements ITInterval {
 
     @Override
     public double criticalValue() {
-        TDistribution distr = new TDistribution(this.sampleSize() - 1);
-        return -distr.inverseCumulativeProbability((1 - this.confidenceLevel()) / 2);
+        // LOOKING UP CRITICAL VALUES FROM T TABLE
+        // confidenceLevels = {0.99, 0.95, 0.9, 0.8, 0.5};
+        int sampleSize = this.sampleSize();
+
+        if(this.sampleSize()>10000)
+            sampleSize=10000;
+
+        int key;
+        if (this.confidenceLevel() == 0.99)
+            key = 0;
+        else if (this.confidenceLevel() == 0.95)
+            key = 1;
+        else if (this.confidenceLevel() == 0.9)
+            key = 2;
+        else if (this.confidenceLevel() == 0.8)
+            key = 3;
+        else if (this.confidenceLevel() == 0.5)
+            key = 4;
+        else
+            throw new RuntimeException("confidence level value not supported. Only 0.99,0.95,0.9,0.8,0.5");
+
+        return tTable[key][sampleSize-1];
+
     }
 
     @Override

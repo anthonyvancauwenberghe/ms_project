@@ -11,6 +11,11 @@ import factories.AgentFactory;
 import factories.InterArrivalTimesFactory;
 import factories.ProductEventFactory;
 
+/**
+ * This config file initiates the simulation with the standard settings found in all the configs.
+ * You can make your own config file to run simulations with custom configuration parameters
+ * that need to be initialized on runtime (e.g when you are running an optimization algorithm)
+ */
 public class DefaultSimConfig implements ISimulationConfig {
 
     protected IQueue[] queues = new IQueue[0];
@@ -32,20 +37,24 @@ public class DefaultSimConfig implements ISimulationConfig {
     public AbstractEventFactory[] getSources() {
         AbstractEventFactory[] sources = new AbstractEventFactory[8];
 
-        double[] consumerInterArrivalTimes = new InterArrivalTimesFactory(SimulationConfig.CONSUMER_ARRIVAL_RATE.sampleInterArrivalRates()).build();
-        double[] corporateInterArrivalTimes = new InterArrivalTimesFactory(SimulationConfig.CORPORATE_ARRIVAL_RATE.sampleInterArrivalRates()).build();
+        double[] consumerInterArrivalTimes = new InterArrivalTimesFactory(SimulationConfig.CONSUMER_ARRIVAL_RATE.sampleArrivalRates()).build();
+        double[] corporateInterArrivalTimes = new InterArrivalTimesFactory(SimulationConfig.CORPORATE_ARRIVAL_RATE.sampleArrivalRates()).build();
 
-        //INIT THE CALL SOURCES
+        /**
+         * The sources that will generate the arrival time events
+         */
         sources[0] = new ProductEventFactory("CONSUMER_CALL_SOURCE", consumerInterArrivalTimes, ProductType.CONSUMER);
         sources[1] = new ProductEventFactory("CORPORATE_CALL_SOURCE", corporateInterArrivalTimes, ProductType.CORPORATE);
 
-        sources[2] = new AgentFactory(MachineType.CONSUMER, AgentShift.MORNING, SimulationConfig.MORNING_CONSUMER_AGENTS);
-        sources[3] = new AgentFactory(MachineType.CORPORATE, AgentShift.MORNING, SimulationConfig.MORNING_CORPORATE_AGENTS);
-        sources[4] = new AgentFactory(MachineType.CONSUMER, AgentShift.NOON, SimulationConfig.NOON_CONSUMER_AGENTS);
-        sources[5] = new AgentFactory(MachineType.CORPORATE, AgentShift.NOON, SimulationConfig.NOON_CORPORATE_AGENTS);
-        sources[6] = new AgentFactory(MachineType.CONSUMER, AgentShift.NIGHT, SimulationConfig.NIGHT_CONSUMER_AGENTS);
-        sources[7] = new AgentFactory(MachineType.CORPORATE, AgentShift.NIGHT, SimulationConfig.NIGHT_CORPORATE_AGENTS);
-
+        /**
+         * The sources that will generate the machine creation events
+         */
+        sources[2] = new AgentFactory(MachineType.CONSUMER, AgentShift.MORNING, ScheduleConfig.MORNING_CONSUMER_AGENTS);
+        sources[3] = new AgentFactory(MachineType.CORPORATE, AgentShift.MORNING, ScheduleConfig.MORNING_CORPORATE_AGENTS);
+        sources[4] = new AgentFactory(MachineType.CONSUMER, AgentShift.NOON, ScheduleConfig.NOON_CONSUMER_AGENTS);
+        sources[5] = new AgentFactory(MachineType.CORPORATE, AgentShift.NOON, ScheduleConfig.NOON_CORPORATE_AGENTS);
+        sources[6] = new AgentFactory(MachineType.CONSUMER, AgentShift.NIGHT, ScheduleConfig.NIGHT_CONSUMER_AGENTS);
+        sources[7] = new AgentFactory(MachineType.CORPORATE, AgentShift.NIGHT, ScheduleConfig.NIGHT_CORPORATE_AGENTS);
 
         return sources;
     }

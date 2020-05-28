@@ -1,50 +1,35 @@
 package models;
 
+import contracts.IArrivalRateFactory;
 import factories.InterArrivalTimesFactory;
-import org.apache.commons.lang3.ArrayUtils;
-import statistics.PoissonDistribution;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 public class ArrivalRate {
-    protected double[] data;
 
-    protected double max;
+    protected IArrivalRateFactory factory;
 
-    public ArrivalRate(double[] data) {
-        this.data = data;
-        this.max = Collections.max(Arrays.asList(ArrayUtils.toObject(data)));
+    protected double[] arrivalRates;
+
+    protected double[] interArrivalTimes;
+
+    public ArrivalRate(IArrivalRateFactory factory) {
+        this.factory = factory;
+        this.arrivalRates = factory.sampleArrivalRates();
+        this.interArrivalTimes = new InterArrivalTimesFactory(this.arrivalRates).build();
     }
 
-    /**
-     * Gives the arrival rate for a certain time of the day (granularity per minute)
-     *
-     * @param hour   int
-     * @param minute int
-     * @return double
-     */
-    public double getArrivalRate(int hour, int minute) {
-        return this.data[hour * 60 + minute];
+    public double getArrivalRate(double time) {
+        return this.factory.getRate(time);
     }
 
-    public int getArrivalRateSample(int hour, int minute) {
-        double rate = this.getArrivalRate(hour, minute);
-        PoissonDistribution distribution = new PoissonDistribution(rate);
-        return distribution.sample();
+    public double getArrivalRate(int h, int m, int s) {
+        return this.getArrivalRate(3600 * h + 60 * m + s);
     }
 
-    public Integer[] getArrivalRateSample(int hour, int minute, int size) {
-        double rate = this.getArrivalRate(hour, minute);
-        PoissonDistribution distribution = new PoissonDistribution(rate);
-        return distribution.sample(size);
+    public double[] sampleInterArrivalTimes() {
+        return this.interArrivalTimes;
     }
 
-    public double[] getRates() {
-        return this.data;
-    }
-
-    public double getMax() {
-        return this.max;
+    public double[] sampleArrivalTimes() {
+        return this.arrivalRates;
     }
 }

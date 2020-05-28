@@ -2,11 +2,8 @@ package factories;
 
 import contracts.IArrivalRateFactory;
 import models.ArrivalRate;
-import models.NewArrivalRate;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ConsumerArrivalTimeFactory implements IArrivalRateFactory {
     protected final double lambda;
@@ -25,12 +22,12 @@ public class ConsumerArrivalTimeFactory implements IArrivalRateFactory {
     }
 
     @Override
-    public NewArrivalRate build() {
-        return new NewArrivalRate(this);
+    public ArrivalRate build() {
+        return new ArrivalRate(this);
     }
 
     @Override
-    public double[] sampleInterArrivalRates() {
+    public double[] sampleArrivalRates() {
         ArrayList<Double> t = new ArrayList<>();
         ArrayList<Double> s = new ArrayList<>();
 

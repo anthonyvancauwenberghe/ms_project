@@ -87,7 +87,6 @@ public class EventProcessor extends AbstractEventProcessor {
         return product.type().isConsumer() ? this.consumerSink : this.corporateSink;
     }
 
-
     @Override
     public IQueue[] getQueues() {
         return new IQueue[]{this.consumerQueue, this.corporateQueue};

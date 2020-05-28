@@ -3,17 +3,12 @@ import configs.SimulationConfig;
 import contracts.Distribution;
 import factories.ConsumerArrivalTimeFactory;
 import factories.CorporateArrivalTimeFactory;
-import org.apache.commons.math3.distribution.TDistribution;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.apache.commons.math3.stat.inference.TTest;
 import org.junit.jupiter.api.Test;
 import statistics.NormalDistribution;
 import statistics.PoissonDistribution;
-import statistics.TInterval;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -74,13 +69,13 @@ public class TestStatistics {
             totalArrivalsFromSampling += (new CorporateArrivalTimeFactory(
                     ArrivalRatesConfig.CORPORATE_AVG_ARRIVAL_RATE_RANGE,
                     SimulationConfig.SIMULATION_RUNTIME
-            )).sampleInterArrivalRates().length;
+            )).sampleArrivalRates().length;
         }
 
         double avg = totalArrivalsFromSampling / iterations;
 
 
-        assertEquals(avgTotalArrivalsIn24h, (int)Math.round(avg));
+        assertEquals(avgTotalArrivalsIn24h, (int) Math.round(avg));
 
     }
 
@@ -97,12 +92,12 @@ public class TestStatistics {
                     ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD,
                     ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_MINUTE_VALUE,
                     ArrivalRatesConfig.CONSUMER_ARRIVAL_LOWEST_HOUR
-            )).sampleInterArrivalRates().length;
+            )).sampleArrivalRates().length;
         }
 
         double avg = totalArrivalsFromSampling / iterations;
 
-        assertEquals(avgTotalArrivalsIn24h, (int)Math.round(avg));
+        assertEquals(avgTotalArrivalsIn24h, (int) Math.round(avg));
     }
 
     @Test
@@ -119,35 +114,9 @@ public class TestStatistics {
         for (int i = 0; i < ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD * 60 * 60; i++) {
             sumRates += factory.getRate(i);
         }
-        double avg = (sumRates / (ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD * 60 * 60))*60;
+        double avg = (sumRates / (ArrivalRatesConfig.CONSUMER_ARRIVAL_RATE_PERIOD * 60 * 60)) * 60;
 
-        assertEquals(ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE, (int)Math.round(avg));
-
-    }
-
-    @Test
-    public void tTest(){
-        TTest test = new TTest();
-        double significance = 0.99;
-        int sampleSize = 38;
-        NormalDistribution distribution = new NormalDistribution(12.4,5.1);
-        double[] samples = Stream.of(distribution.sample(sampleSize)).mapToDouble(Double::doubleValue).toArray();
-
-
-
-        TInterval tInterval = new TInterval(samples, significance);
-
-        assertEquals(sampleSize, tInterval.sampleSize());
-
-        double crit = tInterval.criticalValue();
-
-        double lower = tInterval.lowerBound();
-        double higher = tInterval.upperBound();
-
-
-        String qgsd = " ";
+        assertEquals(ArrivalRatesConfig.CONSUMER_AVG_MINUTE_ARRIVAL_RATE, (int) Math.round(avg));
 
     }
-
-
 }

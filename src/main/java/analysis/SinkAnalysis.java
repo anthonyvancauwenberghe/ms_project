@@ -1,9 +1,11 @@
 package analysis;
 
 import charts.HistogramChart;
+import configs.ServiceTimesConfig;
 import configs.SimulationConfig;
 import contracts.Aggregate;
 import contracts.IQueue;
+import enums.ProductType;
 import models.Machine;
 import models.Product;
 import models.Sink;
@@ -28,14 +30,16 @@ public class SinkAnalysis {
         return this.products.size();
     }
 
-    public double avgQueueTime() {
+    public double avgDailyQueueTime() {
+        return this.totalDailyQueueTime() / this.count();
+    }
+
+    public double totalDailyQueueTime() {
         double total = 0;
-        double count = 0;
         for (Product product : this.products) {
             total += product.getQueueTime();
-            count++;
         }
-        return total / count;
+        return total;
     }
 
     public double probabilityOfQueueTimeLessThan(double duration) {
@@ -62,7 +66,7 @@ public class SinkAnalysis {
         return count / totalCount;
     }
 
-    public double avgQueueTime(int hour) {
+    public double avgDailyQueueTime(int hour) {
 
         double minArrival = hour * 3600;
         double maxArrival = (hour + 1) * 3600;
@@ -103,12 +107,47 @@ public class SinkAnalysis {
         return products;
     }
 
-    public double avgQueueTime(int hour, int minute) {
+    public double avgDailyQueueTime(int hour, int minute) {
         double minArrival = hour * 3600 + minute * 60;
         double maxArrival = hour * 3600 + (minute + 1) * 60;
 
         return this.averageProductValue(this.getProductsWithArrivalBetween(minArrival, maxArrival), input -> input.getQueueTime());
     }
+
+    public double getAvgProductionTime() {
+        return this.averageProductValue(this.getProductsWithArrivalBetween(0, SimulationConfig.SIMULATION_RUNTIME), product -> product.getProductionTime());
+    }
+
+    public double[] getAvgProductionTimeProbabilities() {
+
+        ProductType type = ProductType.CONSUMER;
+        double[] total = new double[1000];
+        for (Product product : this.products) {
+            int interval = (int) (product.getProductionTime() - (product.getProductionTime() % 1));
+            total[interval]++;
+            type = product.type();
+        }
+
+        for (int i = 0; i < total.length; i++) {
+            double value = total[i];
+            if (Double.isNaN(value) || value < 1)
+                value = 0;
+
+            if(type.isConsumer()){
+                if(i< ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT)
+                    value = 0;
+            }
+            if(type.isCorporate()){
+                if(i< ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT)
+                    value = 0;
+            }
+
+            total[i] = value / this.products.size();
+        }
+        return total;
+
+    }
+
 
     protected double averageProductValue(ArrayList<Product> products, Aggregate<Product, Double> aggr) {
         double total = 0;
@@ -137,7 +176,7 @@ public class SinkAnalysis {
     public double[] avgQueueTimePerHour() {
         double[] times = new double[24];
         for (int h = 0; h < 24; h++) {
-            times[h] = this.avgQueueTime(h);
+            times[h] = this.avgDailyQueueTime(h);
         }
         return times;
     }
@@ -146,7 +185,7 @@ public class SinkAnalysis {
         double[] times = new double[24 * 60];
         for (int h = 0; h < 24; h++) {
             for (int m = 0; m < 60; m++) {
-                times[60 * h + m] = this.avgQueueTime(h, m);
+                times[60 * h + m] = this.avgDailyQueueTime(h, m);
             }
         }
         return times;
