@@ -25,7 +25,6 @@ public class SimulationAnalysis {
             corporate.plotAvgMinutelyQueueTimesWithConfidence(0.99, true);
         }
 
-
         if (AnalysisConfig.PLOT_ARRIVALS) {
             consumer.plotAvgMinutelyArrivals();
             corporate.plotAvgMinutelyArrivals();

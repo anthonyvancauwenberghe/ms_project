@@ -11,12 +11,12 @@ public class AnalysisConfig {
     /**
      * Determines the width of the analysis charts
      */
-    public static final int PLOT_WIDTH = 800;
+    public static final int PLOT_WIDTH = 1920;
 
     /**
      * Determines the height of the analysis charts
      */
-    public static final int PLOT_HEIGHT = 500;
+    public static final int PLOT_HEIGHT = 1080;
 
     /**
      * Determines if the charts will be exported to an svg file
@@ -39,7 +39,7 @@ public class AnalysisConfig {
     /**
      * Plot the corporate and consumer arrival times
      */
-    public static boolean PLOT_ARRIVALS = false;
+    public static boolean PLOT_ARRIVALS = true;
 
     /**
      * Plot the corporate and consumer queue times
@@ -49,5 +49,5 @@ public class AnalysisConfig {
     /**
      * Plot the corporate and consumer service times
      */
-    public static boolean PLOT_SERVICE_TIMES = false;
+    public static boolean PLOT_SERVICE_TIMES = true;
 }
