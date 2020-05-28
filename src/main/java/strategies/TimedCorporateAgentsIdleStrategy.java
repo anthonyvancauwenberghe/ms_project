@@ -11,8 +11,8 @@ public class TimedCorporateAgentsIdleStrategy extends AbstractStrategy {
     protected int minConsumerQueueCount;
 
     public TimedCorporateAgentsIdleStrategy() {
-        this.minAvailableCorporateAgents = 6;
-        this.minConsumerQueueCount = 5;
+        this.minAvailableCorporateAgents = 2;
+        this.minConsumerQueueCount = 10;
     }
 
     public TimedCorporateAgentsIdleStrategy(int minAvailableCorporateAgents, int minConsumerQueueCount) {

@@ -17,7 +17,8 @@ public class SimulationAnalysis {
     }
 
     public void execute() {
-
+        if (AnalysisConfig.ANALYZE_BUSINESS_CONSTRAINTS)
+            this.analyzeBusinessConstraints();
 
         if (AnalysisConfig.PLOT_QUEUE_TIMES) {
             consumer.plotAvgMinutelyQueueTimesWithConfidence(0.99, true);
@@ -34,11 +35,6 @@ public class SimulationAnalysis {
             consumer.plotAvgServiceTimeProbabilities();
             corporate.plotAvgServiceTimeProbabilities();
         }
-
-
-        if (AnalysisConfig.ANALYZE_BUSINESS_CONSTRAINTS)
-            this.analyzeBusinessConstraints();
-
     }
 
     public void analyzeBusinessConstraints() {

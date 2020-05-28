@@ -1,6 +1,5 @@
 package factories;
 
-import configs.SimulationConfig;
 import abstracts.AbstractEvent;
 import abstracts.AbstractEventFactory;
 import enums.ProductType;

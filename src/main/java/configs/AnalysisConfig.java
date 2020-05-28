@@ -39,7 +39,7 @@ public class AnalysisConfig {
     /**
      * Plot the corporate and consumer arrival times
      */
-    public static boolean PLOT_ARRIVALS = true;
+    public static boolean PLOT_ARRIVALS = false;
 
     /**
      * Plot the corporate and consumer queue times
@@ -49,5 +49,5 @@ public class AnalysisConfig {
     /**
      * Plot the corporate and consumer service times
      */
-    public static boolean PLOT_SERVICE_TIMES = true;
+    public static boolean PLOT_SERVICE_TIMES = false;
 }

@@ -4,6 +4,8 @@ import contracts.Distribution;
 import contracts.IArrivalRateFactory;
 import contracts.IStrategy;
 import factories.*;
+
+import strategies.CorporateTakeoverStrategy;
 import strategies.TimedCorporateAgentsIdleStrategy;
 
 public class SimulationConfig {
@@ -11,7 +13,7 @@ public class SimulationConfig {
     /**
      * Determines how many simulations days will be run
      */
-    public static final int SIMULATION_COUNT = 100;
+    public static final int SIMULATION_COUNT = 500;
 
     /**
      * Determines if the queue will be warmed to reach a steady state first
@@ -40,7 +42,7 @@ public class SimulationConfig {
     /**
      * Determines the strategy of when corporate workers will help out consumers
      */
-    public static final IStrategy strategy = new TimedCorporateAgentsIdleStrategy();
+    public static final IStrategy strategy = new CorporateTakeoverStrategy();
 
     /**
      * Determines the factory for the consumer arrival rates
