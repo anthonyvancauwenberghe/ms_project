@@ -244,6 +244,9 @@ public class SinkAnalysisAggregator {
         xyir2.setSeriesPaint(0, ChartColor.LIGHT_RED);
         chart.addSeries("Avg Queue time Upper Bound", confidenceInterval[1], 0.46);
 
+        //chart.getRangeAxis().setRange(0, 31.8);
+        //chart.getRangeAxis().setTickUnit(new NumberTickUnit(2));
+
         if (!autoscale)
             chart.getRangeAxis().setRange(0, 5);
 

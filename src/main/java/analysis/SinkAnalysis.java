@@ -79,16 +79,16 @@ public class SinkAnalysis {
 
         //add products from sink
         for (Product product : this.products) {
-            if (product.getArrivalTime() >= minArrival && product.getArrivalTime() < maxArrival) {
+            if (product.getArrivalTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.getArrivalTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
                 products.add(product);
             }
         }
 
         //add products from queue
         for (Product product : this.queue.getQueue()) {
-            if (product.getArrivalTime() >= minArrival && product.getArrivalTime() < maxArrival) {
+            if (product.getArrivalTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.getArrivalTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
                 if (!product.hasQueueTime()) {
-                    product.setQueueTime(SimulationConfig.SIMULATION_RUNTIME - product.getArrivalTime());
+                    product.setQueueTime(SimulationConfig.SIMULATION_RUNTIME - product.getArrivalTimeForAnalysis(product.getArrivalTime()));
                 }
 
                 products.add(product);
@@ -99,7 +99,7 @@ public class SinkAnalysis {
         for (Machine machine : this.queue.getMachines()) {
             if (machine.isBusy()) {
                 Product product = machine.getProduct();
-                if (product.getArrivalTime() >= minArrival && product.getArrivalTime() < maxArrival) {
+                if (product.getArrivalTimeForAnalysis(product.getArrivalTime()) >= minArrival && product.getArrivalTimeForAnalysis(product.getArrivalTime()) < maxArrival) {
                     products.add(product);
                 }
             }

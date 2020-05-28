@@ -1,5 +1,6 @@
 package models;
 
+import configs.SimulationConfig;
 import enums.MachineType;
 import enums.ProductType;
 
@@ -27,7 +28,7 @@ public class Product {
 
     protected double queueTime = -1;
 
-    protected double arrivalTime = -1;
+    protected double arrivalTime = -1.2345;
 
     /**
      * Constructor for the product
@@ -62,6 +63,13 @@ public class Product {
         return this.productionTime;
     }
 
+    public double getArrivalTimeForAnalysis(double arrivalTime) {
+        if (arrivalTime < 0) {
+            return this.getArrivalTimeForAnalysis(arrivalTime + SimulationConfig.SIMULATION_RUNTIME);
+        }
+        return arrivalTime;
+    }
+
     public void setQueueTime(double time) {
         if (queueTime != -1)
             throw new RuntimeException("Can only set production time when it's not initialized yet");
@@ -81,14 +89,14 @@ public class Product {
     }
 
     public void setArrivalTime(double time) {
-        if (arrivalTime != -1)
+        if (arrivalTime != -1.2345)
             throw new RuntimeException("Can only set production time when it's not initialized yet");
 
         this.arrivalTime = time;
     }
 
     public double getArrivalTime() {
-        if (this.arrivalTime == -1)
+        if (this.arrivalTime == -1.2345)
             throw new RuntimeException("Arrival time not initialized");
 
         return this.arrivalTime;
