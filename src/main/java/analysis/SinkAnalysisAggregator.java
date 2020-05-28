@@ -50,6 +50,7 @@ public class SinkAnalysisAggregator {
 
     protected double[] aggregatePerMinute(Aggregate<SinkAnalysis, double[]> aggr) {
         double[] aggregated = new double[24 * 60];
+        double[] lastValues = new double[24 * 60];
 
         for (SinkAnalysis analysis : this.sinkAnalyses) {
             double[] data = aggr.group(analysis);
@@ -60,7 +61,15 @@ public class SinkAnalysisAggregator {
                         value = 0;
                     }
 
-                    aggregated[60 * h + m] += (value / (double) this.count());
+                    if(60 * h + m > (SimulationConfig.SIMULATION_RUNTIME/60 -5)){
+                        aggregated[60 * h + m] += lastValues[60 * h + m -5] ;
+                    }
+                    else{
+                        aggregated[60 * h + m] += (value / (double) this.count());
+                        lastValues[60 * h + m] = (value / (double) this.count());
+
+                    }
+
                 }
             }
         }
@@ -134,9 +143,7 @@ public class SinkAnalysisAggregator {
     }
 
     public double[] avgServiceTimeProbabilities() {
-
         double[] times = new double[1000];
-
 
         for (SinkAnalysis analysis : this.sinkAnalyses) {
             double[] simulationTimes = analysis.getAvgProductionTimeProbabilities();
