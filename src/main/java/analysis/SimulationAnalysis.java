@@ -4,10 +4,10 @@ import configs.AnalysisConfig;
 import configs.BusinessConstraintsConfig;
 import configs.SimulationConfig;
 import contracts.Distribution;
+import factories.ConsumerArrivalTimeFactory;
 import statistics.ChiSquaredTest;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 public class SimulationAnalysis {
 
@@ -20,10 +20,11 @@ public class SimulationAnalysis {
     }
 
     public void execute() {
-        double[] servicetimes = consumer.avgServiceTimeFrequencies();
+        this.compareConsumerArrivalRateDistributions(consumer.countArrivalsPerMinute(),"consumer");
+        this.compareConsumerArrivalRateDistributions(corporate.countArrivalsPerMinute(), "corporate");
 
-        this.compareConsumerServiceTimeDistribution(servicetimes, SimulationConfig.CORPORATE_SERVICE_DISTRIBUTION);
-        this.compareConsumerServiceTimeDistribution(corporate.avgServiceTimeFrequencies(),SimulationConfig.CONSUMER_SERVICE_DISTRIBUTION);
+        this.compareServiceTimeDistributions(consumer.avgServiceTimeFrequencies(), SimulationConfig.CONSUMER_SERVICE_DISTRIBUTION, "Consumer");
+        this.compareServiceTimeDistributions(corporate.avgServiceTimeFrequencies(),SimulationConfig.CORPORATE_SERVICE_DISTRIBUTION, "Corporate");
 
         if (AnalysisConfig.ANALYZE_BUSINESS_CONSTRAINTS)
             this.analyzeBusinessConstraints();
@@ -44,7 +45,7 @@ public class SimulationAnalysis {
         }
     }
 
-    public void compareConsumerServiceTimeDistribution(double[] frequencies, Distribution<Double> distribution) {
+    public void compareServiceTimeDistributions(double[] frequencies, Distribution<Double> distribution, String type) {
         int total = 0;
         for (int i = 0; i < 1000; i++) {
             total += frequencies[i];
@@ -69,7 +70,33 @@ public class SimulationAnalysis {
 
         ChiSquaredTest test = new ChiSquaredTest();
 
-        System.out.println("Service Distribution Chi Square: " + 1 /test.chiSquare(expected, frequencies));
+        System.out.println(type +" Service Time Distribution check Chi Square: " + 1 /test.chiSquare(expected, frequencies));
+    }
+
+    public void compareConsumerArrivalRateDistributions(double[] observed, String type){
+        ConsumerArrivalTimeFactory factory = (ConsumerArrivalTimeFactory) SimulationConfig.CONSUMER_ARRIVAL_RATE;
+
+        double[] expectedRates = new double[24*60];
+
+       for(int i=0; i<SimulationConfig.SIMULATION_COUNT; i++){
+           double[] rates = factory.sampleArrivalRates();
+           for(int t=0; t<rates.length; t++) {
+               double arrivalTime = rates[t];
+               int minute = (int) ((arrivalTime - (arrivalTime %60))/60);
+               expectedRates[minute]++;
+           }
+
+       }
+
+        for (int i = 0; i < expectedRates.length; i++) {
+            double expectedValue = expectedRates[i];
+            if (expectedValue < 1)
+                expectedRates[i] = 1;
+        }
+
+        ChiSquaredTest test = new ChiSquaredTest();
+
+        System.out.println(type + " Arrival Rate Distribution check Chi Square: " + 1 /test.chiSquare(expectedRates, observed));
     }
 
     public void analyzeBusinessConstraints() {

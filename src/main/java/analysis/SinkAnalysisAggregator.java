@@ -60,7 +60,28 @@ public class SinkAnalysisAggregator {
                     if (Double.isNaN(value)) {
                         value = 0;
                     }
-                        aggregated[60 * h + m] += (value / (double) this.count());
+                    aggregated[60 * h + m] += (value / (double) this.count());
+
+                }
+            }
+        }
+
+        return aggregated;
+    }
+
+    protected double[] countPerMinute(Aggregate<SinkAnalysis, double[]> aggr) {
+        double[] aggregated = new double[24 * 60];
+
+
+        for (SinkAnalysis analysis : this.sinkAnalyses) {
+            double[] data = aggr.group(analysis);
+            for (int h = 0; h < 24; h++) {
+                for (int m = 0; m < 60; m++) {
+                    double value = data[60 * h + m];
+                    if (Double.isNaN(value)) {
+                        value = 0;
+                    }
+                    aggregated[60 * h + m] += (value);
 
                 }
             }
@@ -232,6 +253,10 @@ public class SinkAnalysisAggregator {
         return this.aggregatePerMinute(a -> a.arrivalsPerMinute());
     }
 
+    public double[] countArrivalsPerMinute() {
+        return this.countPerMinute(a -> a.arrivalsPerMinute());
+    }
+
     public void plotAvgMinutelyQueueTimesWithConfidence(double confidence, boolean autoscale) {
         double[][] confidenceInterval = this.calculateConfidenceQueueTimesPerMinute(confidence);
 
@@ -244,7 +269,6 @@ public class SinkAnalysisAggregator {
         xyir3.setSeriesPaint(0, ChartColor.LIGHT_BLUE);
         chart.addSeries("Avg Queue time", this.avgQueueTimesPerMinute());
 
-
         XYBarRenderer bar1 = new XYBarRenderer();
         bar1.setDrawBarOutline(false);
         bar1.setShadowVisible(false);
@@ -254,7 +278,6 @@ public class SinkAnalysisAggregator {
         XYItemRenderer xyir1 = plot1.getRenderer(1);
         xyir1.setSeriesPaint(0, ChartColor.LIGHT_GREEN);
         chart.addSeries("Avg Queue time Lower Bound", confidenceInterval[0]);
-
 
         XYBarRenderer bar = new XYBarRenderer();
         bar.setDrawBarOutline(false);
