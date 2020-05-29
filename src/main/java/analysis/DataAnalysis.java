@@ -1,47 +1,55 @@
 package analysis;
 
-import org.apache.commons.math3.distribution.ChiSquaredDistribution;
-import org.apache.commons.math3.stat.inference.ChiSquareTest;
 
 public class DataAnalysis {
 
-/*    public void testDistributions(){
+    /*
+     * chi squared based on the frequencies of the observed vs distribution
+     */
+    public double chiSquare(double[] distributionData, double[] observeddData) {
+        double totalDistribution = 0.0;
+        double totalObserved = 0.0;
 
-        public double chiSquare(final double[] expected, final long[] observed){
 
-            if (expected.length < 2) {
-                throw new DimensionMismatchException(expected.length, 2);
-            }
-            if (expected.length != observed.length) {
-                throw new DimensionMismatchException(expected.length, observed.length);
-            }
-            MathArrays.checkPositive(expected);
-            MathArrays.checkNonNegative(observed);
-
-            double sumExpected = 0d;
-            double sumObserved = 0d;
-            for (int i = 0; i < observed.length; i++) {
-                sumExpected += expected[i];
-                sumObserved += observed[i];
-            }
-            double ratio = 1.0d;
-            boolean rescale = false;
-            if (FastMath.abs(sumExpected - sumObserved) > 10E-6) {
-                ratio = sumObserved / sumExpected;
-                rescale = true;
-            }
-            double sumSq = 0.0d;
-            for (int i = 0; i < observed.length; i++) {
-                if (rescale) {
-                    final double dev = observed[i] - ratio * expected[i];
-                    sumSq += dev * dev / (ratio * expected[i]);
-                } else {
-                    final double dev = observed[i] - expected[i];
-                    sumSq += dev * dev / expected[i];
-                }
-            }
-            return sumSq;
-
+        for (int i = 0; i < observeddData.length; i++) {
+            totalDistribution += observeddData[i];
+            totalObserved += observeddData[i];
         }
-    }*/
+
+        double ratio = 1.0;
+        boolean redo = false;
+        if (Math.abs(totalDistribution - totalObserved) > 0.0000001) {
+            ratio = totalObserved / totalDistribution;
+            redo = true;
+        }
+
+        return this.calculate(distributionData, observeddData, redo, ratio);
+
+    }
+
+    public double calculate(double[] distributionData, double[] observeddData, boolean redo, double ratio) {
+        double chi = 0.0d;
+        double inter;
+        for (int i = 0; i < observeddData.length; i++) {
+            if (redo) {
+                inter = observeddData[i] - ratio * distributionData[i];
+                chi += inter * inter / (ratio * distributionData[i]);
+            } else {
+                inter = observeddData[i] - distributionData[i];
+                chi += inter * inter / distributionData[i];
+            }
+        }
+        return chi;
+    }
+
+    public void checkConstraints(double[] distributionData, double[] observeddData) {
+
+        if (distributionData.length != observeddData.length ||
+                distributionData.length < 2
+
+        ) {
+            throw new RuntimeException("arrays must be equal size and array lengt  > 2");
+        }
+
+    }
 }
