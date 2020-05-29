@@ -153,7 +153,17 @@ public class SinkAnalysisAggregator {
         double[] times = new double[this.sinkAnalyses.size()];
         int counter = 0;
         for (SinkAnalysis analysis : this.sinkAnalyses) {
-            times[counter] = analysis.totalDailyQueueTime() / 3600;
+            times[counter] = (analysis.totalDailyQueueTime() / 3600);
+            counter++;
+        }
+        return times;
+    }
+
+    public double[] avgQueueHourTimePerSimulation() {
+        double[] times = new double[this.sinkAnalyses.size()];
+        int counter = 0;
+        for (SinkAnalysis analysis : this.sinkAnalyses) {
+            times[counter] = (analysis.avgDailyQueueTime() / 3600);
             counter++;
         }
         return times;
