@@ -1,7 +1,7 @@
-package analysis;
+package statistics;
 
 
-public class DataAnalysis {
+public class ChiSquaredTest {
 
     /*
      * chi squared based on the frequencies of the observed vs distribution
@@ -10,6 +10,7 @@ public class DataAnalysis {
         double totalDistribution = 0.0;
         double totalObserved = 0.0;
 
+        this.checkConstraints(distributionData, observeddData);
 
         for (int i = 0; i < observeddData.length; i++) {
             totalDistribution += observeddData[i];
@@ -27,7 +28,7 @@ public class DataAnalysis {
 
     }
 
-    public double calculate(double[] distributionData, double[] observeddData, boolean redo, double ratio) {
+    private double calculate(double[] distributionData, double[] observeddData, boolean redo, double ratio) {
         double chi = 0.0d;
         double inter;
         for (int i = 0; i < observeddData.length; i++) {
@@ -42,7 +43,7 @@ public class DataAnalysis {
         return chi;
     }
 
-    public void checkConstraints(double[] distributionData, double[] observeddData) {
+    private void checkConstraints(double[] distributionData, double[] observeddData) {
 
         if (distributionData.length != observeddData.length ||
                 distributionData.length < 2

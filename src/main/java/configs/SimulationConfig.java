@@ -11,12 +11,12 @@ public class SimulationConfig {
     /**
      * Determines how many simulations days will be run
      */
-    public static final int SIMULATION_COUNT = 500;
+    public static final int SIMULATION_COUNT = 50;
 
     /**
      * Determines if the queue will be warmed to reach a steady state first
      */
-    public static final boolean WARMUP_QUEUE = true;
+    public static final boolean WARMUP_QUEUE = false;
 
     /**
      * Determines the maximum amount of iterations of queue warming.

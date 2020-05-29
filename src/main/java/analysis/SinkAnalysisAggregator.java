@@ -148,6 +148,19 @@ public class SinkAnalysisAggregator {
         return times;
     }
 
+    public double[] avgServiceTimeFrequencies() {
+        double[] times = new double[1000];
+
+        for (SinkAnalysis analysis : this.sinkAnalyses) {
+            double[] simulationTimes = analysis.getAvgProductionTimeFrequencies();
+            for (int i = 0; i < simulationTimes.length; i++) {
+                times[i] += simulationTimes[i];
+            }
+        }
+
+        return times;
+    }
+
 
     public double[] totalQueueHourTimePerSimulation() {
         double[] times = new double[this.sinkAnalyses.size()];

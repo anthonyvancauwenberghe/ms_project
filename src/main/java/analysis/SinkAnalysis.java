@@ -148,6 +148,37 @@ public class SinkAnalysis {
 
     }
 
+    public double[] getAvgProductionTimeFrequencies() {
+
+        ProductType type = ProductType.CONSUMER;
+        double[] total = new double[1000];
+        for (Product product : this.products) {
+            int interval = (int) (product.getTimeInProduction() - (product.getTimeInProduction() % 1));
+            total[interval]++;
+            type = product.type();
+        }
+
+        for (int i = 0; i < total.length; i++) {
+            double value = total[i];
+            if (Double.isNaN(value) || value < 1)
+                value = 0;
+
+            if(type.isConsumer()){
+                if(i< ServiceTimesConfig.CONSUMER_SERVICE_TIME_TRUNC_LEFT)
+                    value = 0;
+            }
+            if(type.isCorporate()){
+                if(i< ServiceTimesConfig.CORPORATE_SERVICE_TIME_TRUNC_LEFT)
+                    value = 0;
+            }
+
+            total[i] = value;
+        }
+
+        return total;
+
+    }
+
 
     protected double averageProductValue(ArrayList<Product> products, Aggregate<Product, Double> aggr) {
         double total = 0;

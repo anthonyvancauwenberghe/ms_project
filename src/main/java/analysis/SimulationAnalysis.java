@@ -3,8 +3,11 @@ package analysis;
 import configs.AnalysisConfig;
 import configs.BusinessConstraintsConfig;
 import configs.SimulationConfig;
+import contracts.Distribution;
+import statistics.ChiSquaredTest;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class SimulationAnalysis {
 
@@ -17,6 +20,11 @@ public class SimulationAnalysis {
     }
 
     public void execute() {
+        double[] servicetimes = consumer.avgServiceTimeFrequencies();
+
+        this.compareConsumerServiceTimeDistribution(servicetimes, SimulationConfig.CORPORATE_SERVICE_DISTRIBUTION);
+        this.compareConsumerServiceTimeDistribution(corporate.avgServiceTimeFrequencies(),SimulationConfig.CONSUMER_SERVICE_DISTRIBUTION);
+
         if (AnalysisConfig.ANALYZE_BUSINESS_CONSTRAINTS)
             this.analyzeBusinessConstraints();
 
@@ -34,6 +42,34 @@ public class SimulationAnalysis {
             consumer.plotAvgServiceTimeProbabilities();
             corporate.plotAvgServiceTimeProbabilities();
         }
+    }
+
+    public void compareConsumerServiceTimeDistribution(double[] frequencies, Distribution<Double> distribution) {
+        int total = 0;
+        for (int i = 0; i < 1000; i++) {
+            total += frequencies[i];
+        }
+
+        double[] expected = new double[frequencies.length];
+        for (int i = 0; i < total; i++) {
+            Double sample = distribution.sample();
+            int rounded = (int) (sample - (sample % 1));
+            expected[rounded]++;
+        }
+
+
+        for (int i = 0; i < 1000; i++) {
+            double expectedValue = expected[i];
+            double observedValue = frequencies[i];
+            if (expectedValue < 1)
+                expected[i] = 1;
+            if (observedValue < 1)
+                frequencies[i] = 1;
+        }
+
+        ChiSquaredTest test = new ChiSquaredTest();
+
+        System.out.println("Service Distribution Chi Square: " + 1 /test.chiSquare(expected, frequencies));
     }
 
     public void analyzeBusinessConstraints() {
