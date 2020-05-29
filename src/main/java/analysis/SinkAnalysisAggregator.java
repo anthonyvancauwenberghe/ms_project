@@ -50,7 +50,7 @@ public class SinkAnalysisAggregator {
 
     protected double[] aggregatePerMinute(Aggregate<SinkAnalysis, double[]> aggr) {
         double[] aggregated = new double[24 * 60];
-        double[] lastValues = new double[24 * 60];
+
 
         for (SinkAnalysis analysis : this.sinkAnalyses) {
             double[] data = aggr.group(analysis);
@@ -60,15 +60,7 @@ public class SinkAnalysisAggregator {
                     if (Double.isNaN(value)) {
                         value = 0;
                     }
-
-                    if(60 * h + m > (SimulationConfig.SIMULATION_RUNTIME/60 -5)){
-                        aggregated[60 * h + m] += lastValues[60 * h + m -5] ;
-                    }
-                    else{
                         aggregated[60 * h + m] += (value / (double) this.count());
-                        lastValues[60 * h + m] = (value / (double) this.count());
-
-                    }
 
                 }
             }
@@ -265,7 +257,7 @@ public class SinkAnalysisAggregator {
         };
 
         chart.getDomainAxis().setTickUnit(tickUnit);
-        chart.getDomainAxis().setRange(0, 24 * 60);
+        chart.getDomainAxis().setRange(0, 24 * 60-10);
 
         chart.render();
     }
@@ -376,7 +368,7 @@ public class SinkAnalysisAggregator {
 
         chart.getDomainAxis().setTickUnit(tickUnit);
 
-        chart.getDomainAxis().setRange(0, 24 * 60);
+        chart.getDomainAxis().setRange(0, 24 * 60 -9);
         chart.render();
     }
 
